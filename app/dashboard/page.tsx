@@ -8,6 +8,7 @@ import { ChartToolbar, MobileToolbar } from "@/app/dashboard/components/chart-to
 import { DashboardLineChart } from "@/app/dashboard/components/line-chart";
 import { ActivePensTable } from "@/app/dashboard/components/active-pens-table";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export default function DashboardPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -44,31 +45,32 @@ export default function DashboardPage() {
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto">
           <div className="p-4">
-            {/* Mobile: Date & Toolbar Toggle */}
-            <div className="flex items-center justify-between md:hidden mb-4">
-              <div className="text-sm">
-                <div className="text-[#6a7282]">09/14/2025 14:00</div>
-                <div className="text-[#6a7282]">09/14/2025 21:00</div>
+            {/* Chart Widgets Card - Contains toolbar and chart */}
+            <Card className="border-0 shadow-none bg-white rounded-lg p-4">
+              {/* Mobile: Date & Toolbar Toggle */}
+              <div className="flex items-center justify-between md:hidden mb-4">
+                <div className="text-sm">
+                  <div className="text-[#101828] font-semibold">09/14/2025 14:00</div>
+                  <div className="text-[#6a7282]">09/14/2025 21:00</div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setIsToolbarOpen(true)}
+                  className="size-10 border-[#ebedf6] bg-[#f8f9fc]"
+                >
+                  <Menu className="size-5 text-[#57637b]" />
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setIsToolbarOpen(true)}
-                className="size-10 border-[#e5e7eb] bg-white"
-              >
-                <Menu className="size-5 text-[#6a7282]" />
-              </Button>
-            </div>
 
-            {/* Desktop/Tablet: Toolbar Row */}
-            <div className="hidden md:block mb-4">
-              <ChartToolbar />
-            </div>
+              {/* Desktop/Tablet: Toolbar Row */}
+              <div className="hidden md:block mb-6">
+                <ChartToolbar />
+              </div>
 
-            {/* Chart Area */}
-            <div className="rounded-lg bg-white p-4 shadow-sm">
+              {/* Chart Area */}
               <DashboardLineChart />
-            </div>
+            </Card>
 
             {/* Active Pens Table */}
             <div className="mt-4">
@@ -88,12 +90,12 @@ export default function DashboardPage() {
           />
           {/* Toolbar Sheet */}
           <div className="fixed right-0 top-0 z-50 h-full w-[200px] bg-white shadow-xl md:hidden overflow-y-auto">
-            <div className="flex items-center justify-end p-4 border-b border-[#e5e7eb]">
+            <div className="flex items-center justify-end p-4 border-b border-[#ebedf6]">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsToolbarOpen(false)}
-                className="size-8 text-[#6a7282] hover:bg-[#f3f4f6]"
+                className="size-8 text-[#57637b] hover:bg-[#f3f4f6]"
               >
                 <X className="size-5" />
               </Button>

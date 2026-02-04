@@ -26,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 
 interface ToolbarButtonProps {
   icon: React.ReactNode;
@@ -42,15 +41,35 @@ function ToolbarButton({ icon, active, onClick, className }: ToolbarButtonProps)
       size="icon"
       onClick={onClick}
       className={cn(
-        "size-10 border-[#e5e7eb]",
+        "size-8 bg-[#f8f9fc] border-[#ebedf6] rounded",
         active
           ? "bg-[#eef0fb] border-[#3347be] text-[#3347be]"
-          : "bg-white text-[#6a7282] hover:bg-[#f9fafb]",
+          : "text-[#57637b] hover:bg-[#f3f4f6]",
         className
       )}
     >
       {icon}
     </Button>
+  );
+}
+
+interface ToolbarGroupProps {
+  children: React.ReactNode;
+  variant?: "primary" | "neutral";
+}
+
+function ToolbarGroup({ children, variant = "primary" }: ToolbarGroupProps) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-1 p-2 rounded-sm border",
+        variant === "primary"
+          ? "bg-[#f3f4fb] border-[#e7e9f7]"
+          : "bg-[#ebedf6] border-[#ebedf6]"
+      )}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -62,14 +81,18 @@ interface ChartToolbarProps {
 export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00", className }: ChartToolbarProps) {
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
-      {/* Date Range */}
-      <div className="text-sm font-medium text-[#242a37] mr-2">{dateRange}</div>
+      {/* Date Range Text */}
+      <div className="flex-1 min-w-0">
+        <p className="text-xl font-semibold text-[#101828] whitespace-nowrap">
+          {dateRange}
+        </p>
+      </div>
 
-      {/* Date Picker & Time Range */}
-      <div className="flex items-center gap-1">
-        <ToolbarButton icon={<Calendar className="size-5" />} />
+      {/* Date Picker & Time Range Group */}
+      <ToolbarGroup>
+        <ToolbarButton icon={<Calendar className="size-4" />} />
         <Select defaultValue="1hour">
-          <SelectTrigger className="h-10 w-auto gap-1 border-[#e5e7eb] bg-white text-sm text-[#242a37] hover:bg-[#f9fafb]">
+          <SelectTrigger className="h-8 w-auto gap-2 bg-[#f8f9fc] border-[#ebedf6] text-sm text-[#57637b] rounded">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -80,51 +103,43 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
             <SelectItem value="1day">1 day</SelectItem>
           </SelectContent>
         </Select>
-      </div>
+      </ToolbarGroup>
 
-      <Separator orientation="vertical" className="h-10 bg-[#e5e7eb]" />
+      {/* Zoom Controls Group */}
+      <ToolbarGroup>
+        <ToolbarButton icon={<ZoomIn className="size-4" />} />
+        <ToolbarButton icon={<ZoomOut className="size-4" />} />
+        <ToolbarButton icon={<Maximize2 className="size-4" />} />
+        <ToolbarButton icon={<RotateCcw className="size-4" />} />
+      </ToolbarGroup>
 
-      {/* Zoom Controls */}
-      <div className="flex items-center gap-1">
-        <ToolbarButton icon={<ZoomIn className="size-5" />} />
-        <ToolbarButton icon={<ZoomOut className="size-5" />} />
-        <ToolbarButton icon={<Maximize2 className="size-5" />} />
-        <ToolbarButton icon={<RotateCcw className="size-5" />} />
-      </div>
+      {/* Pointer Tools Group */}
+      <ToolbarGroup>
+        <ToolbarButton icon={<Move className="size-4" />} />
+        <ToolbarButton icon={<MousePointer className="size-4" />} />
+        <ToolbarButton icon={<Crosshair className="size-4" />} />
+        <ToolbarButton icon={<TrendingUp className="size-4" />} />
+      </ToolbarGroup>
 
-      <Separator orientation="vertical" className="h-10 bg-[#e5e7eb]" />
+      {/* Edit Tools Group (neutral variant) */}
+      <ToolbarGroup variant="neutral">
+        <ToolbarButton icon={<Scissors className="size-4" />} />
+        <ToolbarButton icon={<Eraser className="size-4" />} />
+        <ToolbarButton icon={<MousePointer className="size-4" />} />
+        <ToolbarButton icon={<TrendingUp className="size-4" />} />
+      </ToolbarGroup>
 
-      {/* Pointer Tools */}
-      <div className="flex items-center gap-1">
-        <ToolbarButton icon={<Move className="size-5" />} />
-        <ToolbarButton icon={<MousePointer className="size-5" />} />
-        <ToolbarButton icon={<Crosshair className="size-5" />} active />
-        <ToolbarButton icon={<TrendingUp className="size-5" />} />
-      </div>
+      {/* Export & Actions Group */}
+      <ToolbarGroup>
+        <ToolbarButton icon={<Copy className="size-4" />} />
+        <ToolbarButton icon={<FileText className="size-4" />} />
+        <ToolbarButton icon={<Play className="size-4" />} />
+      </ToolbarGroup>
 
-      <Separator orientation="vertical" className="h-10 bg-[#e5e7eb]" />
-
-      {/* Edit Tools */}
-      <div className="flex items-center gap-1">
-        <ToolbarButton icon={<Scissors className="size-5" />} />
-        <ToolbarButton icon={<Eraser className="size-5" />} />
-        <ToolbarButton icon={<MousePointer className="size-5" />} />
-        <ToolbarButton icon={<TrendingUp className="size-5" />} />
-      </div>
-
-      <Separator orientation="vertical" className="h-10 bg-[#e5e7eb]" />
-
-      {/* Export & Actions */}
-      <div className="flex items-center gap-1">
-        <ToolbarButton icon={<Copy className="size-5" />} />
-        <ToolbarButton icon={<FileText className="size-5" />} />
-        <ToolbarButton icon={<Play className="size-5" />} />
-      </div>
-
-      <Separator orientation="vertical" className="h-10 bg-[#e5e7eb]" />
-
-      {/* List View */}
-      <ToolbarButton icon={<List className="size-5" />} />
+      {/* List View Group */}
+      <ToolbarGroup>
+        <ToolbarButton icon={<List className="size-4" />} />
+      </ToolbarGroup>
     </div>
   );
 }
@@ -134,11 +149,11 @@ export function MobileToolbar({ className }: { className?: string }) {
   return (
     <div className={cn("flex flex-col gap-3 p-4 bg-white", className)}>
       {/* Date Picker */}
-      <ToolbarButton icon={<Calendar className="size-5" />} className="w-full justify-center" />
+      <ToolbarButton icon={<Calendar className="size-4" />} className="w-full justify-center h-10" />
 
       {/* Time Range */}
       <Select defaultValue="1hour">
-        <SelectTrigger className="h-10 w-full border-[#e5e7eb] bg-white text-sm text-[#242a37]">
+        <SelectTrigger className="h-10 w-full border-[#ebedf6] bg-[#f8f9fc] text-sm text-[#57637b]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -152,32 +167,32 @@ export function MobileToolbar({ className }: { className?: string }) {
 
       {/* Tool Groups */}
       <div className="grid grid-cols-2 gap-2">
-        <ToolbarButton icon={<ZoomIn className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<MousePointer className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<ZoomOut className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<Crosshair className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<Maximize2 className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<TrendingUp className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<RotateCcw className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<Move className="size-5" />} className="w-full" />
+        <ToolbarButton icon={<ZoomIn className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<MousePointer className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<ZoomOut className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<Crosshair className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<Maximize2 className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<TrendingUp className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<RotateCcw className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<Move className="size-4" />} className="w-full h-10" />
       </div>
 
-      <Separator className="bg-[#e5e7eb]" />
+      <div className="h-px bg-[#ebedf6]" />
 
       <div className="grid grid-cols-2 gap-2">
-        <ToolbarButton icon={<Scissors className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<Copy className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<Eraser className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<FileText className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<MousePointer className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<Play className="size-5" />} className="w-full" />
-        <ToolbarButton icon={<TrendingUp className="size-5" />} className="w-full" />
+        <ToolbarButton icon={<Scissors className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<Copy className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<Eraser className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<FileText className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<MousePointer className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<Play className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<TrendingUp className="size-4" />} className="w-full h-10" />
       </div>
 
-      <Separator className="bg-[#e5e7eb]" />
+      <div className="h-px bg-[#ebedf6]" />
 
       <div className="grid grid-cols-2 gap-2">
-        <ToolbarButton icon={<List className="size-5" />} className="w-full" />
+        <ToolbarButton icon={<List className="size-4" />} className="w-full h-10" />
       </div>
     </div>
   );
