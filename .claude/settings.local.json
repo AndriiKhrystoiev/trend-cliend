@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_figma_figma__get_metadata",
+      "mcp__plugin_figma_figma__get_screenshot",
+      "mcp__plugin_figma_figma__whoami",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir=false --import-alias=\"@/*\" --turbopack --yes)",
+      "Bash(npx shadcn@latest init -y -d)",
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest add button card input label table select dropdown-menu dialog sheet tabs toast sonner form badge separator avatar skeleton command popover calendar -y)",
+      "Bash(npx shadcn@latest add button card input label table select dropdown-menu dialog sheet tabs sonner form badge separator avatar skeleton command popover calendar -y)",
+      "Bash(npm run build:*)",
+      "mcp__plugin_figma_figma__get_design_context"
+    ]
+  }
+}
