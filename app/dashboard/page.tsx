@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { X, Menu } from "lucide-react";
-import { Header } from "@/app/components/layout/header";
-import { SidebarNav } from "@/app/components/layout/sidebar-nav";
-import { ChartToolbar, MobileToolbar } from "@/app/components/dashboard/chart-toolbar";
-import { DashboardLineChart } from "@/app/components/dashboard/line-chart";
-import { ActivePensTable } from "@/app/components/dashboard/active-pens-table";
-import { cn } from "@/lib/utils";
+import { Header } from "@/components/shared/navigation/header";
+import { SidebarNav } from "@/components/shared/navigation/sidebar-nav";
+import { ChartToolbar, MobileToolbar } from "@/app/dashboard/components/chart-toolbar";
+import { DashboardLineChart } from "@/app/dashboard/components/line-chart";
+import { ActivePensTable } from "@/app/dashboard/components/active-pens-table";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -50,12 +50,14 @@ export default function DashboardPage() {
                 <div className="text-[#6a7282]">09/14/2025 14:00</div>
                 <div className="text-[#6a7282]">09/14/2025 21:00</div>
               </div>
-              <button
+              <Button
+                variant="outline"
+                size="icon"
                 onClick={() => setIsToolbarOpen(true)}
-                className="flex size-10 items-center justify-center rounded-lg border border-[#e5e7eb] bg-white"
+                className="size-10 border-[#e5e7eb] bg-white"
               >
                 <Menu className="size-5 text-[#6a7282]" />
-              </button>
+              </Button>
             </div>
 
             {/* Desktop/Tablet: Toolbar Row */}
@@ -87,12 +89,14 @@ export default function DashboardPage() {
           {/* Toolbar Sheet */}
           <div className="fixed right-0 top-0 z-50 h-full w-[200px] bg-white shadow-xl md:hidden overflow-y-auto">
             <div className="flex items-center justify-end p-4 border-b border-[#e5e7eb]">
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setIsToolbarOpen(false)}
-                className="flex size-8 items-center justify-center rounded text-[#6a7282] hover:bg-[#f3f4f6]"
+                className="size-8 text-[#6a7282] hover:bg-[#f3f4f6]"
               >
                 <X className="size-5" />
-              </button>
+              </Button>
             </div>
             <MobileToolbar />
           </div>

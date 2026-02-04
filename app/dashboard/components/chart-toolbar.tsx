@@ -2,7 +2,6 @@
 
 import {
   Calendar,
-  ChevronDown,
   ZoomIn,
   ZoomOut,
   Maximize2,
@@ -19,6 +18,15 @@ import {
   List,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
 interface ToolbarButtonProps {
   icon: React.ReactNode;
@@ -29,21 +37,21 @@ interface ToolbarButtonProps {
 
 function ToolbarButton({ icon, active, onClick, className }: ToolbarButtonProps) {
   return (
-    <button
+    <Button
+      variant="outline"
+      size="icon"
       onClick={onClick}
       className={cn(
-        "flex size-10 items-center justify-center rounded-lg border border-[#e5e7eb] transition-colors",
-        active ? "bg-[#eef0fb] border-[#3347be] text-[#3347be]" : "bg-white text-[#6a7282] hover:bg-[#f9fafb]",
+        "size-10 border-[#e5e7eb]",
+        active
+          ? "bg-[#eef0fb] border-[#3347be] text-[#3347be]"
+          : "bg-white text-[#6a7282] hover:bg-[#f9fafb]",
         className
       )}
     >
       {icon}
-    </button>
+    </Button>
   );
-}
-
-function ToolbarDivider() {
-  return <div className="h-10 w-px bg-[#e5e7eb]" />;
 }
 
 interface ChartToolbarProps {
@@ -60,13 +68,21 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
       {/* Date Picker & Time Range */}
       <div className="flex items-center gap-1">
         <ToolbarButton icon={<Calendar className="size-5" />} />
-        <button className="flex h-10 items-center gap-1 rounded-lg border border-[#e5e7eb] bg-white px-3 text-sm text-[#242a37] hover:bg-[#f9fafb]">
-          <span>1 hour</span>
-          <ChevronDown className="size-4 text-[#6a7282]" />
-        </button>
+        <Select defaultValue="1hour">
+          <SelectTrigger className="h-10 w-auto gap-1 border-[#e5e7eb] bg-white text-sm text-[#242a37] hover:bg-[#f9fafb]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="15min">15 min</SelectItem>
+            <SelectItem value="30min">30 min</SelectItem>
+            <SelectItem value="1hour">1 hour</SelectItem>
+            <SelectItem value="4hour">4 hours</SelectItem>
+            <SelectItem value="1day">1 day</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      <ToolbarDivider />
+      <Separator orientation="vertical" className="h-10 bg-[#e5e7eb]" />
 
       {/* Zoom Controls */}
       <div className="flex items-center gap-1">
@@ -76,7 +92,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
         <ToolbarButton icon={<RotateCcw className="size-5" />} />
       </div>
 
-      <ToolbarDivider />
+      <Separator orientation="vertical" className="h-10 bg-[#e5e7eb]" />
 
       {/* Pointer Tools */}
       <div className="flex items-center gap-1">
@@ -86,7 +102,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
         <ToolbarButton icon={<TrendingUp className="size-5" />} />
       </div>
 
-      <ToolbarDivider />
+      <Separator orientation="vertical" className="h-10 bg-[#e5e7eb]" />
 
       {/* Edit Tools */}
       <div className="flex items-center gap-1">
@@ -96,7 +112,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
         <ToolbarButton icon={<TrendingUp className="size-5" />} />
       </div>
 
-      <ToolbarDivider />
+      <Separator orientation="vertical" className="h-10 bg-[#e5e7eb]" />
 
       {/* Export & Actions */}
       <div className="flex items-center gap-1">
@@ -105,7 +121,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
         <ToolbarButton icon={<Play className="size-5" />} />
       </div>
 
-      <ToolbarDivider />
+      <Separator orientation="vertical" className="h-10 bg-[#e5e7eb]" />
 
       {/* List View */}
       <ToolbarButton icon={<List className="size-5" />} />
@@ -121,10 +137,18 @@ export function MobileToolbar({ className }: { className?: string }) {
       <ToolbarButton icon={<Calendar className="size-5" />} className="w-full justify-center" />
 
       {/* Time Range */}
-      <button className="flex h-10 items-center justify-center gap-1 rounded-lg border border-[#e5e7eb] bg-white px-3 text-sm text-[#242a37]">
-        <span>1 hour</span>
-        <ChevronDown className="size-4 text-[#6a7282]" />
-      </button>
+      <Select defaultValue="1hour">
+        <SelectTrigger className="h-10 w-full border-[#e5e7eb] bg-white text-sm text-[#242a37]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="15min">15 min</SelectItem>
+          <SelectItem value="30min">30 min</SelectItem>
+          <SelectItem value="1hour">1 hour</SelectItem>
+          <SelectItem value="4hour">4 hours</SelectItem>
+          <SelectItem value="1day">1 day</SelectItem>
+        </SelectContent>
+      </Select>
 
       {/* Tool Groups */}
       <div className="grid grid-cols-2 gap-2">
@@ -138,7 +162,7 @@ export function MobileToolbar({ className }: { className?: string }) {
         <ToolbarButton icon={<Move className="size-5" />} className="w-full" />
       </div>
 
-      <div className="h-px bg-[#e5e7eb]" />
+      <Separator className="bg-[#e5e7eb]" />
 
       <div className="grid grid-cols-2 gap-2">
         <ToolbarButton icon={<Scissors className="size-5" />} className="w-full" />
@@ -150,7 +174,7 @@ export function MobileToolbar({ className }: { className?: string }) {
         <ToolbarButton icon={<TrendingUp className="size-5" />} className="w-full" />
       </div>
 
-      <div className="h-px bg-[#e5e7eb]" />
+      <Separator className="bg-[#e5e7eb]" />
 
       <div className="grid grid-cols-2 gap-2">
         <ToolbarButton icon={<List className="size-5" />} className="w-full" />

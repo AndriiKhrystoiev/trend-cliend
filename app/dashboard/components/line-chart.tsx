@@ -1,6 +1,8 @@
 "use client";
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 // Mock data matching the Figma design
 const chartData = [
@@ -25,7 +27,7 @@ interface DashboardLineChartProps {
 
 export function DashboardLineChart({ className }: DashboardLineChartProps) {
   return (
-    <div className={className}>
+    <div className={cn(className)}>
       {/* Main Chart */}
       <div className="h-[300px] md:h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
@@ -95,8 +97,10 @@ export function DashboardLineChart({ className }: DashboardLineChartProps) {
       </div>
 
       {/* Timestamp badge */}
-      <div className="mt-2 inline-block rounded bg-[#f3f4f6] px-2 py-1 text-xs text-[#6a7282]">
-        09/14/2025 14:00
+      <div className="mt-2">
+        <Badge variant="secondary" className="rounded bg-[#f3f4f6] px-2 py-1 text-xs text-[#6a7282] font-normal">
+          09/14/2025 14:00
+        </Badge>
       </div>
     </div>
   );
