@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DateTimeRangePicker } from "@/components/ui/date-time-range-picker";
 
 interface ToolbarButtonProps {
   icon: React.ReactNode;
@@ -90,7 +91,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
 
       {/* Date Picker & Time Range Group */}
       <ToolbarGroup>
-        <ToolbarButton icon={<Calendar className="size-4" />} />
+        <DateTimeRangePicker />
         <Select defaultValue="1hour">
           <SelectTrigger size="sm" className="h-8 w-auto gap-2 bg-neutral-25 border-neutral-50 text-sm text-neutral-600 rounded">
             <SelectValue />
