@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Eye, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Eye, Info, Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
@@ -21,6 +20,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  ToolbarButton,
+  ToolbarButtonGroup,
+  ToolbarButtonGroupItem,
+} from "@/components/ui/toolbar-button";
+import { ColorPicker } from "@/components/ui/color-picker";
 
 interface PenData {
   id: string;
@@ -72,6 +83,13 @@ interface ActivePensTableProps {
 export function ActivePensTable({ className }: ActivePensTableProps) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+  const [penColors, setPenColors] = useState<Record<string, string>>(() =>
+    mockPensData.reduce((acc, pen) => ({ ...acc, [pen.id]: pen.color }), {})
+  );
+
+  const handleColorChange = (penId: string, newColor: string) => {
+    setPenColors((prev) => ({ ...prev, [penId]: newColor }));
+  };
 
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => {
@@ -106,48 +124,49 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
   };
 
   return (
-    <Card className={cn("border-[#e5e7eb]", className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-[#e5e7eb] px-4 py-3">
-        <CardTitle className="text-lg font-semibold text-[#242a37]">
+    <div className={cn("border border-neutral-50 rounded-lg pb-4", className)}>
+      {/* Table Header */}
+      <div className="flex items-center justify-between px-6 py-4">
+        <h3 className="text-lg font-semibold text-neutral-900">
           Active Pens ({mockPensData.length})
-        </CardTitle>
+        </h3>
         <Button
           variant="default"
-          className="bg-[#3347be] hover:bg-[#2335a8]"
+          className="bg-secondary-700 hover:bg-secondary-800 px-6"
         >
           Clear
         </Button>
-      </CardHeader>
+      </div>
 
-      <CardContent className="p-0">
+      <div className="p-0">
         {/* Desktop Table */}
         <div className="hidden md:block overflow-x-auto">
           <Table>
-            <TableHeader>
-              <TableRow className="border-b border-[#e5e7eb] hover:bg-transparent">
+            <TableHeader className="bg-base-50">
+              <TableRow className="border-b border-neutral-100 bg-transparent hover:bg-transparent">
                 <TableHead className="w-12">
                   <Checkbox
                     checked={selectedRows.size === mockPensData.length}
                     onCheckedChange={toggleAllSelection}
                   />
                 </TableHead>
-                <TableHead className="text-[#6a7282]">Tag name</TableHead>
-                <TableHead className="text-[#6a7282]">Description</TableHead>
-                <TableHead className="text-[#6a7282]">Server</TableHead>
-                <TableHead className="text-[#6a7282]">I/O</TableHead>
-                <TableHead className="text-center text-[#6a7282]">Min</TableHead>
-                <TableHead className="text-center text-[#6a7282]">Max</TableHead>
-                <TableHead className="text-center text-[#6a7282]">Avg</TableHead>
-                <TableHead className="text-center text-[#6a7282]">Stdev</TableHead>
-                <TableHead className="text-[#6a7282]">Weight</TableHead>
-                <TableHead className="text-[#6a7282]">Actions</TableHead>
+                <TableHead className="text-base-700 font-semibold">Tag name</TableHead>
+                <TableHead className="text-base-700 font-semibold">Description</TableHead>
+                <TableHead className="text-base-700 font-semibold">Server</TableHead>
+                <TableHead className="text-base-700 font-semibold">I/O</TableHead>
+                <TableHead className="text-center text-base-700 font-semibold">Min</TableHead>
+                <TableHead className="text-center text-base-700 font-semibold">Max</TableHead>
+                <TableHead className="text-center text-base-700 font-semibold">Avg</TableHead>
+                <TableHead className="text-center text-base-700 font-semibold">Stdev</TableHead>
+                <TableHead className="text-base-700 font-semibold">Weight</TableHead>
+                <TableHead className="text-base-700 font-semibold"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {mockPensData.map((pen) => (
                 <TableRow
                   key={pen.id}
-                  className="border-b border-[#e5e7eb] hover:bg-[#f9fafb]"
+                  className="border-b border-neutral-100 hover:bg-neutral-25"
                 >
                   <TableCell>
                     <Checkbox
@@ -155,24 +174,34 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
                       onCheckedChange={() => toggleSelection(pen.id)}
                     />
                   </TableCell>
-                  <TableCell className="font-medium text-[#3347be]">
+                  <TableCell className="font-medium text-primary-500">
                     {pen.tagName}
                   </TableCell>
-                  <TableCell className="text-[#6a7282]">{pen.description}</TableCell>
-                  <TableCell className="text-[#6a7282]">{pen.server}</TableCell>
-                  <TableCell className="text-[#6a7282]">{pen.io}</TableCell>
-                  <TableCell className="text-center text-[#242a37]">{pen.min}</TableCell>
-                  <TableCell className="text-center text-[#242a37]">{pen.max}</TableCell>
-                  <TableCell className="text-center text-[#242a37]">{pen.avg}</TableCell>
-                  <TableCell className="text-center text-[#242a37]">{pen.stdev}</TableCell>
+                  <TableCell className="text-neutral-400">{pen.description}</TableCell>
+                  <TableCell className="text-neutral-400">
+                    <div className="flex items-center gap-1">
+                      {pen.server}
+                      <Info className="size-3.5 text-neutral-300 shrink-0" />
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-neutral-400">
+                    <div className="flex items-center gap-1">
+                      {pen.io}
+                      <Info className="size-3.5 text-neutral-300 shrink-0" />
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-center text-neutral-900">{pen.min}</TableCell>
+                  <TableCell className="text-center text-neutral-900">{pen.max}</TableCell>
+                  <TableCell className="text-center text-neutral-900">{pen.avg}</TableCell>
+                  <TableCell className="text-center text-neutral-900">{pen.stdev}</TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="size-4 rounded"
-                        style={{ backgroundColor: pen.color }}
+                    <div className="flex items-center gap-3">
+                      <ColorPicker
+                        color={penColors[pen.id] || pen.color}
+                        onChange={(newColor) => handleColorChange(pen.id, newColor)}
                       />
                       <Select defaultValue={pen.weight}>
-                        <SelectTrigger className="h-8 w-20 border-[#e5e7eb]">
+                        <SelectTrigger size="sm" className="h-10 w-[70px] border-neutral-100 bg-neutral-25 rounded-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -184,35 +213,42 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <Select defaultValue="solid">
-                        <SelectTrigger className="h-8 w-16 border-[#e5e7eb]">
+                        <SelectTrigger size="sm" className="h-10 w-[70px] border-neutral-100 bg-neutral-25 rounded-sm mr-2">
                           <SelectValue placeholder="—" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="solid">—</SelectItem>
-                          <SelectItem value="dashed">- -</SelectItem>
+                          <SelectItem value="dashed">---</SelectItem>
                           <SelectItem value="dotted">...</SelectItem>
                         </SelectContent>
                       </Select>
-                      <Button variant="ghost" size="icon" className="size-8 text-[#6a7282]">
-                        <span className="text-xs">A</span>
-                      </Button>
-                      <Button variant="ghost" size="icon" className="size-8 text-[#6a7282]">
-                        <span className="text-xs">M</span>
-                      </Button>
-                      <Button variant="ghost" size="icon" className="size-8 text-[#6a7282]">
-                        <span className="text-xs">L</span>
-                      </Button>
-                      <Button variant="ghost" size="icon" className="size-8 text-[#6a7282]">
-                        <Eye className="size-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="size-8 text-[#6a7282]">
-                        <Plus className="size-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="size-8 text-[#6a7282]">
-                        <Trash2 className="size-4" />
-                      </Button>
+                      <ToolbarButtonGroup>
+                        <ToolbarButtonGroupItem disabled>A</ToolbarButtonGroupItem>
+                        <ToolbarButtonGroupItem>M</ToolbarButtonGroupItem>
+                      </ToolbarButtonGroup>
+                      <ToolbarButton>
+                        L
+                      </ToolbarButton>
+                      <ToolbarButton>
+                        <Eye className="size-5" />
+                      </ToolbarButton>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <ToolbarButton>
+                              <Plus className="size-5" />
+                            </ToolbarButton>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Create a tag</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <ToolbarButton>
+                        <Trash2 className="size-5" />
+                      </ToolbarButton>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -226,7 +262,7 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
           {mockPensData.map((pen) => {
             const isExpanded = expandedRows.has(pen.id);
             return (
-              <div key={pen.id} className="border-b border-[#e5e7eb] p-4">
+              <div key={pen.id} className="border-b border-neutral-100 p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3">
                     <Checkbox
@@ -235,15 +271,15 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
                       className="mt-1"
                     />
                     <div>
-                      <p className="font-medium text-sm text-[#3347be]">{pen.tagName}</p>
-                      <p className="text-xs text-[#6a7282]">{pen.description}</p>
+                      <p className="font-medium text-sm text-primary-500">{pen.tagName}</p>
+                      <p className="text-xs text-neutral-400">{pen.description}</p>
                     </div>
                   </div>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => toggleRow(pen.id)}
-                    className="text-[#6a7282]"
+                    className="text-neutral-400"
                   >
                     Details
                     {isExpanded ? (
@@ -257,59 +293,71 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
                 {isExpanded && (
                   <div className="mt-4 space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-[#6a7282]">Server</span>
-                      <span className="text-[#242a37]">{pen.server}</span>
+                      <span className="text-neutral-400">Server</span>
+                      <span className="text-neutral-900">{pen.server}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#6a7282]">I/O</span>
-                      <span className="text-[#242a37]">{pen.io}</span>
+                      <span className="text-neutral-400">I/O</span>
+                      <span className="text-neutral-900">{pen.io}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#6a7282]">Min</span>
-                      <span className="text-[#242a37]">{pen.min}</span>
+                      <span className="text-neutral-400">Min</span>
+                      <span className="text-neutral-900">{pen.min}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#6a7282]">Max</span>
-                      <span className="text-[#242a37]">{pen.max}</span>
+                      <span className="text-neutral-400">Max</span>
+                      <span className="text-neutral-900">{pen.max}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#6a7282]">Avg</span>
-                      <span className="text-[#242a37]">{pen.avg}</span>
+                      <span className="text-neutral-400">Avg</span>
+                      <span className="text-neutral-900">{pen.avg}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#6a7282]">Stdev</span>
-                      <span className="text-[#242a37]">{pen.stdev}</span>
+                      <span className="text-neutral-400">Stdev</span>
+                      <span className="text-neutral-900">{pen.stdev}</span>
                     </div>
-                    <div className="flex items-center justify-between pt-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[#6a7282]">{pen.weight}</span>
-                        <div
-                          className="size-4 rounded"
-                          style={{ backgroundColor: pen.color }}
-                        />
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Button variant="secondary" size="sm" className="h-7 px-2 text-xs">
-                          A
-                        </Button>
-                        <Button variant="secondary" size="sm" className="h-7 px-2 text-xs">
-                          M
-                        </Button>
-                        <Button variant="secondary" size="sm" className="h-7 px-2 text-xs">
-                          L
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 pt-2">
-                      <Button variant="ghost" size="icon" className="size-8 text-[#6a7282]">
+                    <div className="flex flex-wrap items-center gap-1 pt-3">
+                      {/* Weight dropdown */}
+                      <Select defaultValue={pen.weight}>
+                        <SelectTrigger size="sm" className="h-10 w-[100px] border-neutral-100 bg-white rounded-lg">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1px">1px</SelectItem>
+                          <SelectItem value="2px">2px</SelectItem>
+                          <SelectItem value="3px">3px</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      {/* Line style dropdown */}
+                      <Select defaultValue="solid">
+                        <SelectTrigger className="h-10 w-[90px] border-neutral-100 bg-white rounded-lg">
+                          <SelectValue placeholder="—" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="solid">—</SelectItem>
+                          <SelectItem value="dashed">---</SelectItem>
+                          <SelectItem value="dotted">...</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      {/* A/M/L button group */}
+                      <ToolbarButtonGroup>
+                        <ToolbarButtonGroupItem active>A</ToolbarButtonGroupItem>
+                        <ToolbarButtonGroupItem>M</ToolbarButtonGroupItem>
+                        <ToolbarButtonGroupItem>L</ToolbarButtonGroupItem>
+                      </ToolbarButtonGroup>
+
+                      {/* Action buttons */}
+                      <ToolbarButton>
                         <Eye className="size-5" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="size-8 text-[#6a7282]">
+                      </ToolbarButton>
+                      <ToolbarButton>
                         <Plus className="size-5" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="size-8 text-[#6a7282]">
+                      </ToolbarButton>
+                      <ToolbarButton>
                         <Trash2 className="size-5" />
-                      </Button>
+                      </ToolbarButton>
                     </div>
                   </div>
                 )}
@@ -317,7 +365,7 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
             );
           })}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

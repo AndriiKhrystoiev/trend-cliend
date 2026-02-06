@@ -14,7 +14,7 @@ interface HeaderProps {
 
 export function Header({ onMenuToggle, isMenuOpen, showMenuButton = false }: HeaderProps) {
   return (
-    <header className="flex h-[72px] items-center justify-between border-b border-[#ebedf6] bg-white px-3">
+    <header className="flex h-[72px] items-center justify-between border-b border-neutral-50 bg-white px-3">
       {/* Left: Logo & Menu Toggle */}
       <div className="flex items-center gap-3">
         {showMenuButton && (
@@ -22,12 +22,12 @@ export function Header({ onMenuToggle, isMenuOpen, showMenuButton = false }: Hea
             variant="ghost"
             size="icon"
             onClick={onMenuToggle}
-            className="size-10 text-[#6a7282] hover:bg-[#f9fafb] lg:hidden"
+            className="size-10 text-neutral-400 hover:bg-neutral-25 lg:hidden"
           >
             {isMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
           </Button>
         )}
-        <div className="text-lg font-semibold text-[#3347be]">LOGO</div>
+        <div className="text-lg font-semibold text-primary-500">LOGO</div>
       </div>
 
       {/* Center-Right: Search & Avatar */}
@@ -39,14 +39,14 @@ export function Header({ onMenuToggle, isMenuOpen, showMenuButton = false }: Hea
         <Button
           variant="ghost"
           size="icon"
-          className="flex md:hidden size-10 text-[#6a7282] hover:bg-[#f9fafb]"
+          className="flex md:hidden size-10 text-neutral-400 hover:bg-neutral-25"
         >
           <SearchInput className="size-6" />
         </Button>
 
         {/* Avatar */}
-        <Avatar className="size-12 bg-[#ebedf6]">
-          <AvatarFallback className="bg-[#ebedf6] text-base font-medium text-[#242a37]">
+        <Avatar className="size-12 bg-neutral-50">
+          <AvatarFallback className="bg-neutral-50 text-base font-medium text-neutral-900">
             PH
           </AvatarFallback>
         </Avatar>

@@ -20,17 +20,17 @@ export function SearchInput({
   return (
     <div
       className={cn(
-        "flex items-center gap-2 rounded-sm border border-[#e5e7eb] bg-[#f9fafb] px-3.5 py-3",
+        "flex items-center gap-2 rounded-sm border border-neutral-100 bg-neutral-25 px-3.5 py-3",
         className
       )}
     >
-      <Search className="size-5 shrink-0 text-[#6a7282]" />
+      <Search className="size-5 shrink-0 text-neutral-400" />
       <Input
         type="text"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
-        className="h-auto border-0 bg-transparent p-0 text-base text-[#242a37] placeholder:text-[#6a7282] shadow-none focus-visible:ring-0"
+        className="h-auto border-0 !bg-transparent p-0 text-base text-neutral-800 placeholder:text-neutral-400 shadow-none focus-visible:ring-0"
       />
     </div>
   );

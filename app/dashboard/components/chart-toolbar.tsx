@@ -41,10 +41,10 @@ function ToolbarButton({ icon, active, onClick, className }: ToolbarButtonProps)
       size="icon"
       onClick={onClick}
       className={cn(
-        "size-8 bg-[#f8f9fc] border-[#ebedf6] rounded",
+        "size-8 bg-neutral-25 border-neutral-50 rounded",
         active
-          ? "bg-[#eef0fb] border-[#3347be] text-[#3347be]"
-          : "text-[#57637b] hover:bg-[#f3f4f6]",
+          ? "bg-primary-25 border-primary-500 text-primary-500"
+          : "text-neutral-600 hover:bg-neutral-50",
         className
       )}
     >
@@ -64,8 +64,8 @@ function ToolbarGroup({ children, variant = "primary" }: ToolbarGroupProps) {
       className={cn(
         "flex items-center gap-1 p-2 rounded-sm border",
         variant === "primary"
-          ? "bg-[#f3f4fb] border-[#e7e9f7]"
-          : "bg-[#ebedf6] border-[#ebedf6]"
+          ? "bg-primary-25 border-primary-25"
+          : "bg-neutral-50 border-neutral-50"
       )}
     >
       {children}
@@ -83,7 +83,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
       {/* Date Range Text */}
       <div className="flex-1 min-w-0">
-        <p className="text-xl font-semibold text-[#101828] whitespace-nowrap">
+        <p className="text-xl font-semibold text-neutral-900 whitespace-nowrap">
           {dateRange}
         </p>
       </div>
@@ -92,7 +92,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
       <ToolbarGroup>
         <ToolbarButton icon={<Calendar className="size-4" />} />
         <Select defaultValue="1hour">
-          <SelectTrigger className="h-8 w-auto gap-2 bg-[#f8f9fc] border-[#ebedf6] text-sm text-[#57637b] rounded">
+          <SelectTrigger size="sm" className="h-8 w-auto gap-2 bg-neutral-25 border-neutral-50 text-sm text-neutral-600 rounded">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -122,7 +122,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
       </ToolbarGroup>
 
       {/* Edit Tools Group (neutral variant) */}
-      <ToolbarGroup variant="neutral">
+      <ToolbarGroup>
         <ToolbarButton icon={<Scissors className="size-4" />} />
         <ToolbarButton icon={<Eraser className="size-4" />} />
         <ToolbarButton icon={<MousePointer className="size-4" />} />
@@ -153,7 +153,7 @@ export function MobileToolbar({ className }: { className?: string }) {
 
       {/* Time Range */}
       <Select defaultValue="1hour">
-        <SelectTrigger className="h-10 w-full border-[#ebedf6] bg-[#f8f9fc] text-sm text-[#57637b]">
+        <SelectTrigger className="h-10 w-full border-neutral-50 bg-neutral-25 text-sm text-neutral-600">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -177,7 +177,7 @@ export function MobileToolbar({ className }: { className?: string }) {
         <ToolbarButton icon={<Move className="size-4" />} className="w-full h-10" />
       </div>
 
-      <div className="h-px bg-[#ebedf6]" />
+      <div className="h-px bg-neutral-50" />
 
       <div className="grid grid-cols-2 gap-2">
         <ToolbarButton icon={<Scissors className="size-4" />} className="w-full h-10" />
@@ -189,7 +189,7 @@ export function MobileToolbar({ className }: { className?: string }) {
         <ToolbarButton icon={<TrendingUp className="size-4" />} className="w-full h-10" />
       </div>
 
-      <div className="h-px bg-[#ebedf6]" />
+      <div className="h-px bg-neutral-50" />
 
       <div className="grid grid-cols-2 gap-2">
         <ToolbarButton icon={<List className="size-4" />} className="w-full h-10" />

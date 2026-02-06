@@ -1,12 +1,33 @@
 "use client";
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useState, useCallback, useMemo, useRef } from "react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Brush } from "recharts";
 import { cn } from "@/lib/utils";
+
+// Generate time-based data for the mini timeline
+const generateTimelineData = () => {
+  const baseDate = new Date("2025-09-14T09:00:00");
+  const data = [];
+
+  for (let i = 0; i < 100; i++) {
+    const time = new Date(baseDate.getTime() + i * 6 * 60 * 1000); // 6 minutes per point = 10 hours total
+    data.push({
+      index: i,
+      time: time.toISOString(),
+      displayTime: time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+      y1: 10 + Math.sin(i * 0.15) * 5 + Math.random() * 2,
+      y2: 15 + Math.cos(i * 0.12) * 4 + Math.random() * 2,
+    });
+  }
+  return data;
+};
+
+const miniChartData = generateTimelineData();
 
 // Mock data matching the Figma design
 const chartData = [
   { time: "09:18:11 AM", teg1: 85, teg2: 120 },
-  { time: "12:00:00 AM", teg1: 75, teg2: 130 },
+  { time: "12:00:00 PM", teg1: 75, teg2: 130 },
   { time: "13:00:00 PM", teg1: 85, teg2: 155 },
   { time: "14:00:00 PM", teg1: 55, teg2: 115 },
   { time: "15:00:00 PM", teg1: 40, teg2: 100 },
@@ -14,24 +35,166 @@ const chartData = [
   { time: "17:00:00 PM", teg1: 45, teg2: 150 },
 ];
 
-// Mini timeline data
-const miniChartData = Array.from({ length: 100 }, (_, i) => ({
-  x: i,
-  y1: 10 + Math.sin(i * 0.15) * 5 + Math.random() * 2,
-  y2: 15 + Math.cos(i * 0.12) * 4 + Math.random() * 2,
-}));
-
 interface DashboardLineChartProps {
   className?: string;
 }
 
+// Format date for tooltip display
+const formatDateForTooltip = (isoString: string) => {
+  const date = new Date(isoString);
+  const dateStr = date.toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric"
+  });
+  const timeStr = date.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
+  return `${dateStr} ${timeStr}`;
+};
+
+// Helper function to create a path with specific rounded corners
+const createRoundedRectPath = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+  side: 'left' | 'right'
+) => {
+  const r = radius;
+
+  if (side === 'left') {
+    // Rounded on left, square on right
+    return `
+      M ${x + r} ${y}
+      L ${x + width} ${y}
+      L ${x + width} ${y + height}
+      L ${x + r} ${y + height}
+      Q ${x} ${y + height} ${x} ${y + height - r}
+      L ${x} ${y + r}
+      Q ${x} ${y} ${x + r} ${y}
+      Z
+    `;
+  } else {
+    // Square on left, rounded on right
+    return `
+      M ${x} ${y}
+      L ${x + width - r} ${y}
+      Q ${x + width} ${y} ${x + width} ${y + r}
+      L ${x + width} ${y + height - r}
+      Q ${x + width} ${y + height} ${x + width - r} ${y + height}
+      L ${x} ${y + height}
+      L ${x} ${y}
+      Z
+    `;
+  }
+};
+
+// Track traveller positions to determine left vs right
+let travellerPositions: number[] = [];
+
+// Smart traveller that detects if it's the left or right handle
+const SmartTraveller = (props: { x: number; y: number; width: number; height: number }) => {
+  const { x, y, height } = props;
+
+  // Collect positions and determine side
+  if (!travellerPositions.includes(x)) {
+    travellerPositions.push(x);
+    // Keep only last 2 positions
+    if (travellerPositions.length > 2) {
+      travellerPositions = travellerPositions.slice(-2);
+    }
+  }
+
+  // Determine side based on position relative to other traveller
+  const isLeftTraveller = travellerPositions.length < 2 || x <= Math.min(...travellerPositions);
+
+  return (
+    <g>
+      <path
+        d={createRoundedRectPath(x, y, 10, height, 4, isLeftTraveller ? 'left' : 'right')}
+        fill="#3347be"
+        style={{ cursor: "ew-resize" }}
+      />
+    </g>
+  );
+};
+
 export function DashboardLineChart({ className }: DashboardLineChartProps) {
+  const [brushRange, setBrushRange] = useState({ startIndex: 0, endIndex: 99 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [hoverInfo, setHoverInfo] = useState<{ x: number; date: string } | null>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
+
+  const handleBrushChange = useCallback((range: { startIndex?: number; endIndex?: number }) => {
+    if (range.startIndex !== undefined && range.endIndex !== undefined) {
+      setBrushRange({ startIndex: range.startIndex, endIndex: range.endIndex });
+      setIsDragging(true);
+    }
+  }, []);
+
+  // Hide tooltips after dragging stops
+  const handleMouseUp = useCallback(() => {
+    // Keep tooltips visible for a short moment after release
+    setTimeout(() => setIsDragging(false), 1500);
+  }, []);
+
+  // Handle hover on timeline for point tooltip
+  const handleTimelineMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!timelineRef.current) return;
+
+    const rect = timelineRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = x / rect.width;
+    const dataIndex = Math.round(percentage * (miniChartData.length - 1));
+    const clampedIndex = Math.max(0, Math.min(dataIndex, miniChartData.length - 1));
+    const dataPoint = miniChartData[clampedIndex];
+
+    if (dataPoint) {
+      setHoverInfo({
+        x: x,
+        date: formatDateForTooltip(dataPoint.time).replace(/:00 (AM|PM)$/, ' $1'), // Shorter format
+      });
+    }
+  }, []);
+
+  const handleTimelineMouseLeave = useCallback(() => {
+    setHoverInfo(null);
+  }, []);
+
+  // Get formatted dates for the range tooltips
+  const startDate = useMemo(() => {
+    const dataPoint = miniChartData[brushRange.startIndex];
+    return dataPoint ? formatDateForTooltip(dataPoint.time) : "";
+  }, [brushRange.startIndex]);
+
+  const endDate = useMemo(() => {
+    const dataPoint = miniChartData[brushRange.endIndex];
+    return dataPoint ? formatDateForTooltip(dataPoint.time) : "";
+  }, [brushRange.endIndex]);
+
+  // Calculate tooltip positions (percentage-based)
+  const startPosition = useMemo(() => {
+    return (brushRange.startIndex / (miniChartData.length - 1)) * 100;
+  }, [brushRange.startIndex]);
+
+  const endPosition = useMemo(() => {
+    return (brushRange.endIndex / (miniChartData.length - 1)) * 100;
+  }, [brushRange.endIndex]);
+
+  // Check if range is not full (user has adjusted it)
+  const isRangeAdjusted = brushRange.startIndex > 0 || brushRange.endIndex < 99;
+
   return (
     <div className={cn(className)}>
       {/* Main Chart */}
       <div className="h-[300px] md:h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
+          <LineChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 10 }}>
             <CartesianGrid strokeDasharray="0" stroke="#e5e7eb" horizontal={true} vertical={false} />
             <XAxis
               dataKey="time"
@@ -80,24 +243,84 @@ export function DashboardLineChart({ className }: DashboardLineChartProps) {
         </ResponsiveContainer>
       </div>
 
-      {/* Timestamp Badge */}
-      <div className="mt-2 mb-2">
-        <span className="inline-block bg-[#f3f4f6] rounded px-2 py-1 text-sm text-[#242a37]">
-          09/14/2025 14:00
-        </span>
-      </div>
+      {/* Timeline Section */}
+      <div className="relative mt-2">
+        {/* Range Tooltips - only show when dragging or range is adjusted */}
+        {(isDragging || isRangeAdjusted) && (
+          <div className="absolute -top-8 left-0 right-0 pointer-events-none z-10">
+            {/* Start tooltip */}
+            <div
+              className="absolute -translate-x-1/2 bg-white border border-neutral-200 rounded px-2 py-1 text-xs text-neutral-700 shadow-md whitespace-nowrap"
+              style={{ left: `${startPosition}%` }}
+            >
+              {startDate}
+            </div>
+            {/* End tooltip */}
+            <div
+              className="absolute -translate-x-1/2 bg-white border border-neutral-200 rounded px-2 py-1 text-xs text-neutral-700 shadow-md whitespace-nowrap"
+              style={{ left: `${endPosition}%` }}
+            >
+              {endDate}
+            </div>
+          </div>
+        )}
 
-      {/* Mini Timeline */}
-      <div className="h-6 rounded-sm bg-[#eef0fb] overflow-hidden relative">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={miniChartData} margin={{ top: 2, right: 12, left: 12, bottom: 2 }}>
-            <Line type="monotone" dataKey="y1" stroke="#3347be" strokeWidth={1} dot={false} />
-            <Line type="monotone" dataKey="y2" stroke="#22c55e" strokeWidth={1} dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
-        {/* Selection handles */}
-        <div className="absolute left-0 top-0 h-full w-2.5 bg-[#3347be] rounded-l-sm cursor-ew-resize" />
-        <div className="absolute right-0 top-0 h-full w-2.5 bg-[#3347be] rounded-r-sm cursor-ew-resize" />
+        {/* Hover tooltip */}
+        {hoverInfo && !isDragging && (
+          <div
+            className="absolute -top-8 -translate-x-1/2 bg-white border border-neutral-200 rounded px-2 py-1 text-xs text-neutral-700 shadow-md whitespace-nowrap pointer-events-none z-20"
+            style={{ left: hoverInfo.x }}
+          >
+            {hoverInfo.date}
+          </div>
+        )}
+
+        {/* Mini Timeline with Brush */}
+        <div
+          ref={timelineRef}
+          className="h-8 cursor-crosshair relative"
+          onMouseMove={handleTimelineMouseMove}
+          onMouseLeave={handleTimelineMouseLeave}
+          onMouseUp={handleMouseUp}
+        >
+          {/* Base background */}
+          <div className="absolute inset-0 bg-[#eef0fb] rounded-sm" />
+
+          {/* Selection highlight overlay - only when range is adjusted */}
+          {isRangeAdjusted && (
+            <div
+              className="absolute top-0 h-full bg-[#929BB0] pointer-events-none opacity-40"
+              style={{
+                left: `${startPosition}%`,
+                width: `${endPosition - startPosition}%`,
+              }}
+            />
+          )}
+
+          {/* Brush with transparent fill so backgrounds show through */}
+          <div className="absolute inset-0">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={miniChartData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                <Brush
+                  dataKey="index"
+                  height={32}
+                  stroke="transparent"
+                  fill="transparent"
+                  startIndex={brushRange.startIndex}
+                  endIndex={brushRange.endIndex}
+                  onChange={handleBrushChange}
+                  traveller={SmartTraveller}
+                  travellerWidth={10}
+                >
+                  <LineChart data={miniChartData}>
+                    <Line type="monotone" dataKey="y1" stroke="#3347be" strokeWidth={1} dot={false} />
+                    <Line type="monotone" dataKey="y2" stroke="#22c55e" strokeWidth={1} dot={false} />
+                  </LineChart>
+                </Brush>
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
     </div>
   );

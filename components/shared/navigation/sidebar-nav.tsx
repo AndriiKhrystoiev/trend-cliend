@@ -25,13 +25,13 @@ function TreeCheckbox({ checked, onChange }: TreeCheckboxProps) {
         onChange();
       }}
       className={cn(
-        "flex size-[18px] shrink-0 items-center justify-center rounded-[5px] border transition-colors",
+        "flex size-[12px] shrink-0 items-center justify-center rounded-[3px] border transition-colors",
         checked
-          ? "border-[#3347be] bg-[#3347be]"
-          : "border-[#ced4e0] bg-white"
+          ? "border-primary-500 bg-primary-500"
+          : "border-neutral-100 bg-white"
       )}
     >
-      {checked && <Check className="size-3.5 text-white" strokeWidth={3} />}
+      {checked && <Check className="size-2 text-white" strokeWidth={3} />}
     </button>
   );
 }
@@ -131,7 +131,7 @@ function TreeItem({
       <div
         className={cn(
           "relative flex items-center h-10 cursor-pointer",
-          isTag && isSelected && "bg-[#eef0fb]"
+          isTag && isSelected && "bg-primary-25"
         )}
         onClick={handleClick}
       >
@@ -143,7 +143,7 @@ function TreeItem({
               showLine && (
                 <div
                   key={idx}
-                  className="absolute top-0 bottom-0 w-px bg-[#ced4e0]"
+                  className="absolute top-0 bottom-0 w-px bg-neutral-100"
                   style={{ left: `${idx * 24 + 20}px` }}
                 />
               )
@@ -151,7 +151,7 @@ function TreeItem({
 
             {/* Horizontal connector line */}
             <div
-              className="absolute h-px bg-[#ced4e0]"
+              className="absolute h-px bg-neutral-100"
               style={{
                 left: `${(level - 1) * 24 + 20}px`,
                 top: '20px',
@@ -162,7 +162,7 @@ function TreeItem({
             {/* Vertical line segment for current item */}
             <div
               className={cn(
-                "absolute w-px bg-[#ced4e0]",
+                "absolute w-px bg-neutral-100",
                 isLast ? "top-0 h-5" : "top-0 bottom-0"
               )}
               style={{ left: `${(level - 1) * 24 + 20}px` }}
@@ -178,7 +178,7 @@ function TreeItem({
           {/* Icon/Checkbox/Chevron */}
           {isCompany ? (
             <>
-              <Folder className="size-5 text-[#9ca3b4] fill-none" strokeWidth={1.5} />
+              <Folder className="size-5 text-neutral-300 fill-none" strokeWidth={1.5} />
             </>
           ) : isTag ? (
             <TreeCheckbox
@@ -186,7 +186,7 @@ function TreeItem({
               onChange={() => onSelect(node.id)}
             />
           ) : hasChildren ? (
-            <button className="flex size-5 items-center justify-center text-[#6a7282]">
+            <button className="flex size-5 items-center justify-center text-neutral-400">
               {isExpanded ? (
                 <ChevronDown className="size-4" />
               ) : (
@@ -194,7 +194,7 @@ function TreeItem({
               )}
             </button>
           ) : (
-            <button className="flex size-5 items-center justify-center text-[#6a7282]">
+            <button className="flex size-5 items-center justify-center text-neutral-400">
               <ChevronRight className="size-4" />
             </button>
           )}
@@ -203,7 +203,7 @@ function TreeItem({
           <span
             className={cn(
               "text-sm whitespace-nowrap",
-              isTag && isSelected ? "text-[#3347be] font-medium" : "text-[#242a37]"
+              isTag && isSelected ? "text-primary-500 font-medium" : "text-neutral-900"
             )}
           >
             {node.name}
@@ -270,11 +270,11 @@ export function SidebarNav({ className }: SidebarNavProps) {
   };
 
   return (
-    <nav className={cn("flex flex-col bg-white border-r border-[#ebedf6]", className)}>
+    <nav className={cn("flex flex-col bg-white border-r border-neutral-50", className)}>
       {/* Server Select Dropdown */}
-      <div className="p-3 border-b border-[#ebedf6]">
+      <div className="p-3 border-b border-neutral-50">
         <Select defaultValue="">
-          <SelectTrigger className="w-full border-[#ced4e0] bg-white text-sm text-[#242a37] hover:bg-[#f9fafb]">
+          <SelectTrigger className="w-full border-neutral-100 bg-white text-sm text-neutral-900 hover:bg-neutral-25">
             <SelectValue placeholder="Select Server" />
           </SelectTrigger>
           <SelectContent>

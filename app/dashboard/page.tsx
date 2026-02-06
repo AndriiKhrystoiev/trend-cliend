@@ -15,7 +15,7 @@ export default function DashboardPage() {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen flex-col bg-[#f8f9fc]">
+    <div className="flex h-screen flex-col bg-neutral-25">
       {/* Header */}
       <Header
         onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -50,16 +50,16 @@ export default function DashboardPage() {
               {/* Mobile: Date & Toolbar Toggle */}
               <div className="flex items-center justify-between md:hidden mb-4">
                 <div className="text-sm">
-                  <div className="text-[#101828] font-semibold">09/14/2025 14:00</div>
-                  <div className="text-[#6a7282]">09/14/2025 21:00</div>
+                  <div className="text-neutral-900 font-semibold">09/14/2025 14:00</div>
+                  <div className="text-neutral-400">09/14/2025 21:00</div>
                 </div>
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => setIsToolbarOpen(true)}
-                  className="size-10 border-[#ebedf6] bg-[#f8f9fc]"
+                  className="size-10 border-neutral-50 bg-neutral-25"
                 >
-                  <Menu className="size-5 text-[#57637b]" />
+                  <Menu className="size-5 text-neutral-600" />
                 </Button>
               </div>
 
@@ -70,12 +70,12 @@ export default function DashboardPage() {
 
               {/* Chart Area */}
               <DashboardLineChart />
-            </Card>
 
-            {/* Active Pens Table */}
-            <div className="mt-4">
-              <ActivePensTable />
-            </div>
+              {/* Active Pens Table - Inside the same card */}
+              <div className="mt-6">
+                <ActivePensTable />
+              </div>
+            </Card>
           </div>
         </main>
       </div>
@@ -90,12 +90,12 @@ export default function DashboardPage() {
           />
           {/* Toolbar Sheet */}
           <div className="fixed right-0 top-0 z-50 h-full w-[200px] bg-white shadow-xl md:hidden overflow-y-auto">
-            <div className="flex items-center justify-end p-4 border-b border-[#ebedf6]">
+            <div className="flex items-center justify-end p-4 border-b border-neutral-50">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsToolbarOpen(false)}
-                className="size-8 text-[#57637b] hover:bg-[#f3f4f6]"
+                className="size-8 text-neutral-600 hover:bg-neutral-50"
               >
                 <X className="size-5" />
               </Button>
