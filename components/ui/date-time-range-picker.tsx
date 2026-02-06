@@ -121,7 +121,7 @@ export function DateTimeRangePicker({
           </div>
 
           {/* Dropdown Content */}
-          <div className="p-5 pt-0 flex flex-col gap-4 shadow-lg rounded-[4px] border border-neutral-50 bg-white">
+          <div className="p-5 pt-2 flex flex-col gap-4 shadow-lg rounded-[4px] border border-neutral-50 bg-white">
             {/* Calendar */}
             <Calendar
               mode="single"
@@ -130,30 +130,30 @@ export function DateTimeRangePicker({
               className="p-0"
               classNames={{
                 months: "flex flex-col",
-                month: "space-y-2",
-                caption: "flex justify-between items-center py-0",
+                month: "space-y-4",
+                caption: "flex justify-center items-center relative pt-1",
                 caption_label: "text-sm font-semibold text-neutral-900",
-                nav: "flex items-center gap-1",
-                nav_button: "size-8 bg-transparent p-0 hover:bg-neutral-50 rounded",
+                nav: "absolute inset-x-0 flex items-center justify-between px-6",
+                nav_button: "size-8 bg-transparent p-0 hover:bg-neutral-50 rounded flex items-center justify-center",
                 nav_button_previous: "",
                 nav_button_next: "",
                 table: "w-full border-collapse",
                 head_row: "flex",
                 head_cell: "text-neutral-800 w-9 font-semibold text-xs text-center",
-                row: "flex w-full",
+                row: "flex w-full mt-1",
                 cell: "size-9 text-center text-xs p-0 relative focus-within:relative focus-within:z-20",
-                day: "size-9 p-0 font-semibold text-xs hover:bg-neutral-50 rounded-lg text-neutral-900",
+                day: "size-9 p-0 font-semibold text-sm hover:bg-neutral-50 rounded-lg text-[#4a5565]",
                 day_selected: "bg-primary-700 text-white hover:bg-primary-700 rounded-lg",
                 day_today: "bg-neutral-100 text-neutral-900 rounded-lg",
-                day_outside: "text-neutral-300",
-                day_disabled: "text-neutral-300",
+                day_outside: "text-[#99a1af]",
+                day_disabled: "text-[#99a1af]",
                 day_hidden: "invisible",
               }}
             />
 
             {/* Time Inputs */}
             <div className="flex gap-2.5">
-              <div className="flex-1 flex flex-col gap-2">
+              <div className="flex-1 flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-neutral-900">
                   From
                 </label>
@@ -168,7 +168,7 @@ export function DateTimeRangePicker({
                   <Clock className="absolute right-3 top-1/2 -translate-y-1/2 size-5 text-neutral-400 pointer-events-none" />
                 </div>
               </div>
-              <div className="flex-1 flex flex-col gap-2">
+              <div className="flex-1 flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-neutral-900">
                   To
                 </label>

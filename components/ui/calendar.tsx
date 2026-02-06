@@ -3,8 +3,8 @@
 import * as React from "react"
 import {
   ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
+  MoveLeft,
+  MoveRight,
 } from "lucide-react"
 import {
   DayPicker,
@@ -145,13 +145,13 @@ function Calendar({
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
             return (
-              <ChevronLeftIcon className={cn("size-4", className)} {...props} />
+              <MoveLeft className={cn("size-4", className)} {...props} />
             )
           }
 
           if (orientation === "right") {
             return (
-              <ChevronRightIcon
+              <MoveRight
                 className={cn("size-4", className)}
                 {...props}
               />
