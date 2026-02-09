@@ -41,7 +41,7 @@ export default function DashboardPage() {
           <>
             {/* Backdrop */}
             <div
-              className="fixed inset-0 z-40 bg-black/50 md:hidden"
+              className="fixed inset-0 z-100 bg-black/50 md:hidden"
               onClick={() => setIsSidebarOpen(false)}
             />
             {/* Sidebar */}
@@ -98,7 +98,7 @@ export default function DashboardPage() {
             onClick={() => setIsToolbarOpen(false)}
           />
           {/* Toolbar Sheet */}
-          <div className="fixed right-0 top-0 z-50 h-full w-[200px] bg-white shadow-xl md:hidden overflow-y-auto">
+          <div className="fixed right-0 top-0 z-100 h-full w-[120px] bg-primary-25 shadow-xl md:hidden overflow-y-auto">
             <div className="flex items-center justify-end p-4 border-b border-neutral-50">
               <Button
                 variant="ghost"

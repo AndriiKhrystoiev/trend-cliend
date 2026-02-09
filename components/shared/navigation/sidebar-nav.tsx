@@ -288,86 +288,133 @@ export function SidebarNav({ className, collapsible, collapsed, onToggle }: Side
   };
 
   const isCollapsed = collapsible && collapsed;
+  const isExpanded = collapsible && !collapsed;
 
   return (
-    <div className={cn("relative", className)}>
-      {/* Collapsed preview: narrow strip with folder icons */}
-      {isCollapsed && (
-        <div className="flex flex-col bg-white border-r border-neutral-50 h-full w-12">
-          {/* Collapsed header area */}
-          <div className="h-12 flex items-center justify-center">
-            <ChevronDown className="size-4 text-neutral-400" />
+    <>
+      {/* Backdrop overlay when expanded */}
+      {isExpanded && (
+        <div
+          className="fixed inset-0 bg-black/40 z-100 transition-opacity duration-300"
+          onClick={onToggle}
+        />
+      )}
+
+      {/* Expanded sidebar - full screen overlay */}
+      {isExpanded && (
+        <nav className="fixed left-0 top-0 bottom-0 w-80 z-100 bg-white border-r border-neutral-50 shadow-xl flex flex-col">
+          {/* Server Select Dropdown */}
+          <div className="p-3 border-b border-neutral-50">
+            <Select defaultValue="">
+              <SelectTrigger className="w-full border-neutral-100 bg-white text-sm text-neutral-900 hover:bg-neutral-25">
+                <SelectValue placeholder="Select Server" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="server-1">Server 1</SelectItem>
+                <SelectItem value="server-2">Server 2</SelectItem>
+                <SelectItem value="server-3">Server 3</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Folder icons for top-level items */}
-          <div className="flex-1 flex flex-col items-center gap-1 pb-3">
-            {mockTreeData.map((node) => (
-              <button
+          {/* Tree Navigation */}
+          <div className="flex-1 overflow-y-auto py-2">
+            {mockTreeData.map((node, index) => (
+              <TreeItem
                 key={node.id}
-                onClick={() => {
-                  onToggle?.();
-                }}
-                className="flex items-center justify-center size-8 rounded hover:bg-neutral-50 transition-colors"
-              >
-                <Folder className="size-5 text-neutral-300" strokeWidth={1.5} />
-              </button>
+                node={node}
+                level={0}
+                expandedNodes={expandedNodes}
+                onToggle={toggleNode}
+                onSelect={toggleTag}
+                selectedTags={selectedTags}
+                isLast={index === mockTreeData.length - 1}
+                parentLines={[]}
+              />
             ))}
           </div>
-        </div>
+        </nav>
       )}
 
-      {/* Expanded sidebar */}
-      <nav
-        className={cn(
-          "flex flex-col bg-white border-r border-neutral-50 h-full transition-all duration-300 ease-in-out overflow-hidden",
-          isCollapsed ? "w-0 absolute" : "w-full"
+      <div className={cn("relative", className)}>
+        {/* Collapsed preview: narrow strip with folder icons */}
+        {isCollapsed && (
+          <div className="flex flex-col bg-white border-r border-neutral-50 h-full w-12">
+            {/* Collapsed header area */}
+            <div className="h-12 flex items-center justify-center">
+              <ChevronDown className="size-4 text-neutral-400" />
+            </div>
+
+            {/* Folder icons for top-level items */}
+            <div className="flex-1 flex flex-col items-center gap-1 pb-3">
+              {mockTreeData.map((node) => (
+                <button
+                  key={node.id}
+                  onClick={() => {
+                    onToggle?.();
+                  }}
+                  className="flex items-center justify-center size-8 rounded hover:bg-neutral-50 transition-colors"
+                >
+                  <Folder className="size-5 text-neutral-300" strokeWidth={1.5} />
+                </button>
+              ))}
+            </div>
+          </div>
         )}
-      >
-        {/* Server Select Dropdown */}
-        <div className="p-3 border-b border-neutral-50 min-w-48">
-          <Select defaultValue="">
-            <SelectTrigger className="w-full border-neutral-100 bg-white text-sm text-neutral-900 hover:bg-neutral-25">
-              <SelectValue placeholder="Select Server" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="server-1">Server 1</SelectItem>
-              <SelectItem value="server-2">Server 2</SelectItem>
-              <SelectItem value="server-3">Server 3</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
 
-        {/* Tree Navigation */}
-        <div className="flex-1 overflow-y-auto py-2 min-w-48">
-          {mockTreeData.map((node, index) => (
-            <TreeItem
-              key={node.id}
-              node={node}
-              level={0}
-              expandedNodes={expandedNodes}
-              onToggle={toggleNode}
-              onSelect={toggleTag}
-              selectedTags={selectedTags}
-              isLast={index === mockTreeData.length - 1}
-              parentLines={[]}
-            />
-          ))}
-        </div>
-      </nav>
+        {/* Normal embedded sidebar (when not collapsible or in default state) */}
+        {!collapsible && (
+          <nav className="flex flex-col bg-white border-r border-neutral-50 h-full w-full">
+            {/* Server Select Dropdown */}
+            <div className="p-3 border-b border-neutral-50 min-w-48">
+              <Select defaultValue="">
+                <SelectTrigger className="w-full border-neutral-100 bg-white text-sm text-neutral-900 hover:bg-neutral-25">
+                  <SelectValue placeholder="Select Server" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="server-1">Server 1</SelectItem>
+                  <SelectItem value="server-2">Server 2</SelectItem>
+                  <SelectItem value="server-3">Server 3</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-      {/* Collapse/Expand toggle arrow */}
-      {collapsible && (
-        <button
-          onClick={onToggle}
-          className="absolute top-1/2 -translate-y-1/2 -right-3 z-10 flex items-center justify-center w-8 h-8 bg-neutral-25 border border-neutral-50 rounded-sm hover:bg-neutral-50 transition-colors"
-        >
-          {collapsed ? (
-            <ChevronRight className="size-4 text-neutral-500" />
-          ) : (
-            <ChevronLeft className="size-4 text-neutral-500" />
-          )}
-        </button>
-      )}
-    </div>
+            {/* Tree Navigation */}
+            <div className="flex-1 overflow-y-auto py-2 min-w-48">
+              {mockTreeData.map((node, index) => (
+                <TreeItem
+                  key={node.id}
+                  node={node}
+                  level={0}
+                  expandedNodes={expandedNodes}
+                  onToggle={toggleNode}
+                  onSelect={toggleTag}
+                  selectedTags={selectedTags}
+                  isLast={index === mockTreeData.length - 1}
+                  parentLines={[]}
+                />
+              ))}
+            </div>
+          </nav>
+        )}
+
+        {/* Collapse/Expand toggle arrow */}
+        {collapsible && (
+          <button
+            onClick={onToggle}
+            className={cn(
+              "absolute top-1/2 -translate-y-1/2 flex items-center justify-center w-8 h-8 bg-neutral-25 border border-neutral-50 rounded-sm hover:bg-neutral-50 transition-colors",
+              isExpanded ? "fixed left-76 z-200" : "-right-3 z-10"
+            )}
+          >
+            {collapsed ? (
+              <ChevronRight className="size-4 text-neutral-500" />
+            ) : (
+              <ChevronLeft className="size-4 text-neutral-500" />
+            )}
+          </button>
+        )}
+      </div>
+    </>
   );
 }

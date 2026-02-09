@@ -92,7 +92,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
       {/* Date Range Text */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-sm">
         <p className="text-xl font-semibold text-neutral-900 whitespace-nowrap">
           {dateRange}
         </p>
@@ -157,52 +157,58 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
 // Mobile version - vertical toolbar in a sheet
 export function MobileToolbar({ className }: { className?: string }) {
   return (
-    <div className={cn("flex flex-col gap-3 p-4 bg-white", className)}>
-      {/* Date Picker */}
-      <ToolbarButton icon={<Calendar className="size-4" />} className="w-full justify-center h-10" />
-
-      {/* Time Range */}
-      <Select defaultValue="1hour">
-        <SelectTrigger className="h-10 w-full border-neutral-50 bg-neutral-25 text-sm text-neutral-600">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="15min">15 min</SelectItem>
-          <SelectItem value="30min">30 min</SelectItem>
-          <SelectItem value="1hour">1 hour</SelectItem>
-          <SelectItem value="4hour">4 hours</SelectItem>
-          <SelectItem value="1day">1 day</SelectItem>
-        </SelectContent>
-      </Select>
-
-      {/* Tool Groups */}
-      <div className="grid grid-cols-2 gap-2">
-        <ToolbarButton icon={<ZoomIn className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<MousePointer className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<ZoomOut className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<Crosshair className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<Maximize className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<TrendingUp className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<Refresh className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<ChartRefresh className="size-4" />} className="w-full h-10" />
+    <div className={cn("flex flex-col gap-2 pt-2 bg-primary-25", className)}>
+      {/* Date Picker & Time Range Group */}
+      <div className="flex flex-col gap-2 p-2 mx-2 bg-neutral-50 rounded w-26">
+        <ToolbarButton icon={<Calendar className="size-4" />} className="w-8 justify-center h-8" />
+        <Select defaultValue="1hour">
+          <SelectTrigger className="h-10 w-22 border-neutral-50 bg-white text-sm text-neutral-600">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="15min">15 min</SelectItem>
+            <SelectItem value="30min">30 min</SelectItem>
+            <SelectItem value="1hour">1 hour</SelectItem>
+            <SelectItem value="4hour">4 hours</SelectItem>
+            <SelectItem value="1day">1 day</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      <div className="h-px bg-neutral-50" />
-
-      <div className="grid grid-cols-2 gap-2">
-        <ToolbarButton icon={<ChartRefresh2 className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<Copy className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<Frame2 className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<FileText className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<MousePointer className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<Play className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<TrendingUp className="size-4" />} className="w-full h-10" />
+      {/* Zoom Controls Group */}
+      <div className="flex justify-center gap-2">
+        <div className="flex flex-col items-center bg-neutral-50 rounded gap-2 p-2 w-12">
+          <ToolbarButton icon={<ZoomIn className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<ZoomOut className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<Maximize className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<Refresh className="size-4" />} className="w-8 h-8" />
+        </div>
+        <div className="flex flex-col items-center bg-neutral-50 rounded gap-2 p-2 w-12">
+          <ToolbarButton icon={<ChartRefresh className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<Frame className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<ChartGrowUp className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<ChartGrowDown className="size-4" />} className="w-8 h-8" />
+        </div>
       </div>
 
-      <div className="h-px bg-neutral-50" />
+      {/* Edit Tools Group */}
+      <div className="flex justify-center items-baseline gap-2">
+        <div className="flex flex-col items-center bg-neutral-50 rounded gap-2 p-2 w-12">
+          <ToolbarButton icon={<ChartRefresh2 className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<Frame2 className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<ChartGrowUp2 className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<ChartGrowDown2 className="size-4" />} className="w-8 h-8" />
+        </div>
+        <div className="flex flex-col items-center bg-neutral-50 rounded gap-2 p-2 w-12">
+          <ToolbarButton icon={<ChartPie className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<DocumentText className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<Play className="size-4" />} className="w-8 h-8" />
+        </div>
+      </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        <ChartActionsMenu className="w-full h-10" />
+      {/* Actions Menu Group */}
+      <div className="p-2 mx-2 bg-neutral-50 rounded w-12">
+        <ChartActionsMenu />
       </div>
     </div>
   );
