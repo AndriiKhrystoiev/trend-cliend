@@ -149,24 +149,28 @@ function TreeItem({
               )
             ))}
 
-            {/* Horizontal connector line */}
+            {/* Curved connector from parent vertical line to item */}
             <div
-              className="absolute h-px bg-neutral-100"
+              className="absolute border-l border-b border-neutral-100 rounded-bl-xl"
               style={{
                 left: `${(level - 1) * 24 + 20}px`,
-                top: '20px',
+                top: 0,
                 width: '12px',
+                height: '20px',
               }}
             />
 
-            {/* Vertical line segment for current item */}
-            <div
-              className={cn(
-                "absolute w-px bg-neutral-100",
-                isLast ? "top-0 h-5" : "top-0 bottom-0"
-              )}
-              style={{ left: `${(level - 1) * 24 + 20}px` }}
-            />
+            {/* Vertical line continuation for non-last items */}
+            {!isLast && (
+              <div
+                className="absolute w-px bg-neutral-100"
+                style={{
+                  left: `${(level - 1) * 24 + 20}px`,
+                  top: '20px',
+                  bottom: 0,
+                }}
+              />
+            )}
           </>
         )}
 
