@@ -149,6 +149,18 @@ function TreeItem({
               )
             ))}
 
+            {/* Vertical line continuation for non-last items - goes behind the curve */}
+            {!isLast && (
+              <div
+                className="absolute w-px bg-neutral-100"
+                style={{
+                  left: `${(level - 1) * 24 + 20}px`,
+                  top: 0,
+                  bottom: 0,
+                }}
+              />
+            )}
+
             {/* Curved connector from parent vertical line to item */}
             <div
               className="absolute border-l border-b border-neutral-100 rounded-bl-xl"
@@ -159,18 +171,6 @@ function TreeItem({
                 height: '20px',
               }}
             />
-
-            {/* Vertical line continuation for non-last items */}
-            {!isLast && (
-              <div
-                className="absolute w-px bg-neutral-100"
-                style={{
-                  left: `${(level - 1) * 24 + 20}px`,
-                  top: '20px',
-                  bottom: 0,
-                }}
-              />
-            )}
           </>
         )}
 
