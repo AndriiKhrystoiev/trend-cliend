@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Eye, Info, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Eye, Plus, Trash } from "@/components/icons";
 import {
   Table,
   TableBody,
@@ -232,13 +233,13 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
                         L
                       </ToolbarButton>
                       <ToolbarButton>
-                        <Eye className="size-5" />
+                        <Eye className="size-4" />
                       </ToolbarButton>
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <ToolbarButton>
-                              <Plus className="size-5" />
+                              <Plus className="size-4" />
                             </ToolbarButton>
                           </TooltipTrigger>
                           <TooltipContent>
@@ -247,7 +248,7 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
                         </Tooltip>
                       </TooltipProvider>
                       <ToolbarButton>
-                        <Trash2 className="size-5" />
+                        <Trash className="size-4" />
                       </ToolbarButton>
                     </div>
                   </TableCell>
@@ -350,13 +351,13 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
 
                       {/* Action buttons */}
                       <ToolbarButton>
-                        <Eye className="size-5" />
+                        <Eye className="size-4" />
                       </ToolbarButton>
                       <ToolbarButton>
-                        <Plus className="size-5" />
+                        <Plus className="size-4" />
                       </ToolbarButton>
                       <ToolbarButton>
-                        <Trash2 className="size-5" />
+                        <Trash className="size-4" />
                       </ToolbarButton>
                     </div>
                   </div>

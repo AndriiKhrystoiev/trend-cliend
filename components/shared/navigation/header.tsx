@@ -14,7 +14,7 @@ interface HeaderProps {
 
 export function Header({ onMenuToggle, isMenuOpen, showMenuButton = false }: HeaderProps) {
   return (
-    <header className="flex h-[72px] items-center justify-between border-b border-neutral-50 bg-white px-3">
+    <header className="flex h-[72px] items-center justify-between border-b border-neutral-50 bg-white px-3 z-100">
       {/* Left: Logo & Menu Toggle */}
       <div className="flex items-center gap-3">
         {showMenuButton && (

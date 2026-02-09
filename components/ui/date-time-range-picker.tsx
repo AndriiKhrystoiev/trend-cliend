@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
+import { Calendar as CalendarIcon } from "@/components/icons"
 import { Input } from "@/components/ui/input"
 import {
   Popover,
@@ -10,7 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { format, parse } from "date-fns"
-import { Calendar as CalendarIcon, X, Clock } from "lucide-react"
+import { X, Clock } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface DateTimeRangePickerProps {

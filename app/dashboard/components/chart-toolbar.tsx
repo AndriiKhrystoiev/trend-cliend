@@ -2,23 +2,31 @@
 
 import {
   Calendar,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
-  RotateCcw,
-  Move,
   MousePointer,
   Crosshair,
   TrendingUp,
-  Scissors,
-  Eraser,
   Copy,
   FileText,
   Play,
-  List,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  ChartGrowDown,
+  ChartGrowDown2,
+  ChartGrowUp,
+  ChartGrowUp2,
+  ChartPie,
+  ChartRefresh,
+  ChartRefresh2,
+  DocumentText,
+  Frame,
+  Frame2,
+  Maximize,
+  Refresh,
+  ZoomIn,
+  ZoomOut
+} from "@/components/icons";
 import {
   Select,
   SelectContent,
@@ -27,6 +35,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DateTimeRangePicker } from "@/components/ui/date-time-range-picker";
+import { ChartActionsMenu } from "./chart-actions-menu";
 
 interface ToolbarButtonProps {
   icon: React.ReactNode;
@@ -63,7 +72,7 @@ function ToolbarGroup({ children, variant = "primary" }: ToolbarGroupProps) {
   return (
     <div
       className={cn(
-        "flex items-center gap-1 p-2 rounded-sm border",
+        "flex items-center gap-1 p-2 rounded-xs border",
         variant === "primary"
           ? "bg-primary-25 border-primary-25"
           : "bg-neutral-50 border-neutral-50"
@@ -110,36 +119,36 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
       <ToolbarGroup>
         <ToolbarButton icon={<ZoomIn className="size-4" />} />
         <ToolbarButton icon={<ZoomOut className="size-4" />} />
-        <ToolbarButton icon={<Maximize2 className="size-4" />} />
-        <ToolbarButton icon={<RotateCcw className="size-4" />} />
+        <ToolbarButton icon={<Maximize className="size-4" />} />
+        <ToolbarButton icon={<Refresh className="size-4" />} />
       </ToolbarGroup>
 
       {/* Pointer Tools Group */}
       <ToolbarGroup>
-        <ToolbarButton icon={<Move className="size-4" />} />
-        <ToolbarButton icon={<MousePointer className="size-4" />} />
-        <ToolbarButton icon={<Crosshair className="size-4" />} />
-        <ToolbarButton icon={<TrendingUp className="size-4" />} />
+        <ToolbarButton icon={<ChartRefresh className="size-4" />} />
+        <ToolbarButton icon={<Frame className="size-4" />} />
+        <ToolbarButton icon={<ChartGrowUp className="size-4" />} />
+        <ToolbarButton icon={<ChartGrowDown className="size-4" />} />
       </ToolbarGroup>
 
       {/* Edit Tools Group (neutral variant) */}
       <ToolbarGroup>
-        <ToolbarButton icon={<Scissors className="size-4" />} />
-        <ToolbarButton icon={<Eraser className="size-4" />} />
-        <ToolbarButton icon={<MousePointer className="size-4" />} />
-        <ToolbarButton icon={<TrendingUp className="size-4" />} />
+        <ToolbarButton icon={<ChartRefresh2 className="size-4" />} />
+        <ToolbarButton icon={<Frame2 className="size-4" />} />
+        <ToolbarButton icon={<ChartGrowUp2 className="size-4" />} />
+        <ToolbarButton icon={<ChartGrowDown2 className="size-4" />} />
       </ToolbarGroup>
 
       {/* Export & Actions Group */}
       <ToolbarGroup>
-        <ToolbarButton icon={<Copy className="size-4" />} />
-        <ToolbarButton icon={<FileText className="size-4" />} />
+        <ToolbarButton icon={<ChartPie className="size-4" />} />
+        <ToolbarButton icon={<DocumentText className="size-4" />} />
         <ToolbarButton icon={<Play className="size-4" />} />
       </ToolbarGroup>
 
       {/* List View Group */}
       <ToolbarGroup>
-        <ToolbarButton icon={<List className="size-4" />} />
+        <ChartActionsMenu />
       </ToolbarGroup>
     </div>
   );
@@ -172,18 +181,18 @@ export function MobileToolbar({ className }: { className?: string }) {
         <ToolbarButton icon={<MousePointer className="size-4" />} className="w-full h-10" />
         <ToolbarButton icon={<ZoomOut className="size-4" />} className="w-full h-10" />
         <ToolbarButton icon={<Crosshair className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<Maximize2 className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<Maximize className="size-4" />} className="w-full h-10" />
         <ToolbarButton icon={<TrendingUp className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<RotateCcw className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<Move className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<Refresh className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<ChartRefresh className="size-4" />} className="w-full h-10" />
       </div>
 
       <div className="h-px bg-neutral-50" />
 
       <div className="grid grid-cols-2 gap-2">
-        <ToolbarButton icon={<Scissors className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<ChartRefresh2 className="size-4" />} className="w-full h-10" />
         <ToolbarButton icon={<Copy className="size-4" />} className="w-full h-10" />
-        <ToolbarButton icon={<Eraser className="size-4" />} className="w-full h-10" />
+        <ToolbarButton icon={<Frame2 className="size-4" />} className="w-full h-10" />
         <ToolbarButton icon={<FileText className="size-4" />} className="w-full h-10" />
         <ToolbarButton icon={<MousePointer className="size-4" />} className="w-full h-10" />
         <ToolbarButton icon={<Play className="size-4" />} className="w-full h-10" />
@@ -193,7 +202,7 @@ export function MobileToolbar({ className }: { className?: string }) {
       <div className="h-px bg-neutral-50" />
 
       <div className="grid grid-cols-2 gap-2">
-        <ToolbarButton icon={<List className="size-4" />} className="w-full h-10" />
+        <ChartActionsMenu className="w-full h-10" />
       </div>
     </div>
   );
