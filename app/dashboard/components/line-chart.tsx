@@ -192,55 +192,57 @@ export function DashboardLineChart({ className }: DashboardLineChartProps) {
   return (
     <div className={cn(className)}>
       {/* Main Chart */}
-      <div className="h-[300px] md:h-[350px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 10 }}>
-            <CartesianGrid strokeDasharray="0" stroke="#e5e7eb" horizontal={true} vertical={false} />
-            <XAxis
-              dataKey="time"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#6a7282", fontSize: 12 }}
-              dy={10}
-            />
-            <YAxis
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#6a7282", fontSize: 12 }}
-              domain={[0, 200]}
-              ticks={[0, 50, 100, 150, 200]}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "white",
-                border: "1px solid #e5e7eb",
-                borderRadius: "8px",
-                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                padding: "12px",
-              }}
-              labelStyle={{ color: "#242a37", fontWeight: 600, marginBottom: "8px" }}
-              labelFormatter={() => "Data"}
-            />
-            <Line
-              type="linear"
-              dataKey="teg1"
-              name="Teg 1: Data"
-              stroke="#3347be"
-              strokeWidth={2}
-              dot={false}
-              activeDot={{ r: 6, fill: "#3347be" }}
-            />
-            <Line
-              type="linear"
-              dataKey="teg2"
-              name="Teg 2: Data"
-              stroke="#22c55e"
-              strokeWidth={2}
-              dot={false}
-              activeDot={{ r: 6, fill: "#22c55e" }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+      <div className="h-[300px] md:h-[350px] overflow-x-auto">
+        <div className="min-w-[600px] h-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 10 }}>
+              <CartesianGrid strokeDasharray="0" stroke="#e5e7eb" horizontal={true} vertical={false} />
+              <XAxis
+                dataKey="time"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#6a7282", fontSize: 12 }}
+                dy={10}
+              />
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "#6a7282", fontSize: 12 }}
+                domain={[0, 200]}
+                ticks={[0, 50, 100, 150, 200]}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "white",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                  padding: "12px",
+                }}
+                labelStyle={{ color: "#242a37", fontWeight: 600, marginBottom: "8px" }}
+                labelFormatter={() => "Data"}
+              />
+              <Line
+                type="linear"
+                dataKey="teg1"
+                name="Teg 1: Data"
+                stroke="#3347be"
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 6, fill: "#3347be" }}
+              />
+              <Line
+                type="linear"
+                dataKey="teg2"
+                name="Teg 2: Data"
+                stroke="#22c55e"
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 6, fill: "#22c55e" }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       {/* Timeline Section */}
