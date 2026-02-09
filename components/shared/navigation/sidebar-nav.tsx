@@ -359,7 +359,7 @@ export function SidebarNav({ className, collapsible, collapsed, onToggle }: Side
       {collapsible && (
         <button
           onClick={onToggle}
-          className="absolute top-1/2 -translate-y-1/2 -right-3 z-10 flex items-center justify-center w-6 h-12 bg-white border border-neutral-100 rounded-r-md shadow-sm hover:bg-neutral-25 transition-colors"
+          className="absolute top-1/2 -translate-y-1/2 -right-3 z-10 flex items-center justify-center w-8 h-8 bg-neutral-25 border border-neutral-50 rounded-sm hover:bg-neutral-50 transition-colors"
         >
           {collapsed ? (
             <ChevronRight className="size-4 text-neutral-500" />
