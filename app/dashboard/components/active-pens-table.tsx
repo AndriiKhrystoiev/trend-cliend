@@ -126,8 +126,8 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
 
   return (
     <div className={cn("border border-neutral-50 rounded-lg pb-4", className)}>
-      {/* Table Header */}
-      <div className="flex items-center justify-between px-6 py-4">
+      {/* Desktop Table Header */}
+      <div className="hidden md:flex items-center justify-between px-6 py-4">
         <h3 className="text-lg font-semibold text-neutral-900">
           Active Pens ({mockPensData.length})
         </h3>
@@ -137,6 +137,25 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
         >
           Clear
         </Button>
+      </div>
+
+      {/* Mobile Table Header */}
+      <div className="md:hidden px-4 py-4">
+        <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+          Active Pens ({mockPensData.length})
+        </h3>
+        <div className="flex items-center gap-3">
+          <Checkbox
+            checked={selectedRows.size === mockPensData.length}
+            onCheckedChange={toggleAllSelection}
+          />
+          <Button
+            variant="default"
+            className="bg-secondary-700 hover:bg-secondary-800 flex-1"
+          >
+            Clear
+          </Button>
+        </div>
       </div>
 
       <div className="p-0">
@@ -259,28 +278,27 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
         </div>
 
         {/* Mobile Card View */}
-        <div className="md:hidden">
+        <div className="md:hidden px-4">
           {mockPensData.map((pen) => {
             const isExpanded = expandedRows.has(pen.id);
             return (
-              <div key={pen.id} className="border-b border-neutral-100 p-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3">
+              <div key={pen.id} className="border border-neutral-100 rounded-lg bg-neutral-25 p-4 mb-3">
+                <div className="flex flex-col gap-4 items-start justify-between mb-3">
+                  <div className="flex items-start gap-3 flex-1">
                     <Checkbox
                       checked={selectedRows.has(pen.id)}
                       onCheckedChange={() => toggleSelection(pen.id)}
                       className="mt-1"
                     />
-                    <div>
-                      <p className="font-medium text-sm text-primary-500">{pen.tagName}</p>
-                      <p className="text-xs text-neutral-400">{pen.description}</p>
+                    <div className="flex-1">
+                      <p className="font-medium text-sm text-primary-500 break-words">{pen.tagName}</p>
                     </div>
                   </div>
                   <Button
-                    variant="ghost"
-                    size="sm"
+                    variant="outline"
+                    size="lg"
                     onClick={() => toggleRow(pen.id)}
-                    className="text-neutral-400"
+                    className="text-neutral-400 shrink-0 w-full"
                   >
                     Details
                     {isExpanded ? (
@@ -292,73 +310,83 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
                 </div>
 
                 {isExpanded && (
-                  <div className="mt-4 space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-neutral-400">Server</span>
-                      <span className="text-neutral-900">{pen.server}</span>
+                  <div className="mt-4 space-y-3 text-sm">
+                    <div>
+                      <span className="text-base-700 block mb-1 font-semibold">Server</span>
+                      <span className="text-neutral-700 break-all">{pen.server}</span>
+                    </div>
+                    <div>
+                      <span className="text-base-700 block mb-1 font-semibold">I/O</span>
+                      <span className="text-neutral-700 break-all">{pen.io}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-400">I/O</span>
-                      <span className="text-neutral-900">{pen.io}</span>
+                      <span className="text-base-700 font-semibold">Min</span>
+                      <span className="text-neutral-700">{pen.min}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-400">Min</span>
-                      <span className="text-neutral-900">{pen.min}</span>
+                      <span className="text-base-700 font-semibold">Max</span>
+                      <span className="text-neutral-700">{pen.max}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-400">Max</span>
-                      <span className="text-neutral-900">{pen.max}</span>
+                      <span className="text-base-700 font-semibold  ">Avg</span>
+                      <span className="text-neutral-700">{pen.avg}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-400">Avg</span>
-                      <span className="text-neutral-900">{pen.avg}</span>
+                      <span className="text-base-700 font-semibold">Stdev</span>
+                      <span className="text-neutral-700">{pen.stdev}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-neutral-400">Stdev</span>
-                      <span className="text-neutral-900">{pen.stdev}</span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-1 pt-3">
-                      {/* Weight dropdown */}
-                      <Select defaultValue={pen.weight}>
-                        <SelectTrigger size="sm" className="h-10 w-[100px] border-neutral-100 bg-white rounded-lg">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1px">1px</SelectItem>
-                          <SelectItem value="2px">2px</SelectItem>
-                          <SelectItem value="3px">3px</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    
+                    {/* Controls section */}
+                    <div className="pt-3 space-y-3">
+                      {/* Dropdowns row */}
+                      <div className="flex items-center gap-2">
+                        <Select defaultValue={pen.weight}>
+                          <SelectTrigger size="sm" className="h-10 flex-1 border-neutral-100 bg-white rounded">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1px">1px</SelectItem>
+                            <SelectItem value="2px">2px</SelectItem>
+                            <SelectItem value="3px">3px</SelectItem>
+                          </SelectContent>
+                        </Select>
 
-                      {/* Line style dropdown */}
-                      <Select defaultValue="solid">
-                        <SelectTrigger className="h-10 w-[90px] border-neutral-100 bg-white rounded-lg">
-                          <SelectValue placeholder="—" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="solid">—</SelectItem>
-                          <SelectItem value="dashed">---</SelectItem>
-                          <SelectItem value="dotted">...</SelectItem>
-                        </SelectContent>
-                      </Select>
+                        <Select defaultValue="solid">
+                          <SelectTrigger size="sm" className="h-10 flex-1 border-neutral-100 bg-white rounded">
+                            <SelectValue placeholder="—" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="solid">—</SelectItem>
+                            <SelectItem value="dashed">---</SelectItem>
+                            <SelectItem value="dotted">...</SelectItem>
+                          </SelectContent>
+                        </Select>
 
-                      {/* A/M/L button group */}
-                      <ToolbarButtonGroup>
-                        <ToolbarButtonGroupItem active>A</ToolbarButtonGroupItem>
-                        <ToolbarButtonGroupItem>M</ToolbarButtonGroupItem>
-                        <ToolbarButtonGroupItem>L</ToolbarButtonGroupItem>
-                      </ToolbarButtonGroup>
+                        <ColorPicker
+                          color={penColors[pen.id] || pen.color}
+                          onChange={(newColor) => handleColorChange(pen.id, newColor)}
+                          className="w-8 h-8"
+                        />
+                      </div>
 
-                      {/* Action buttons */}
-                      <ToolbarButton>
-                        <Eye className="size-4" />
-                      </ToolbarButton>
-                      <ToolbarButton>
-                        <Plus className="size-4" />
-                      </ToolbarButton>
-                      <ToolbarButton>
-                        <Trash className="size-4" />
-                      </ToolbarButton>
+                      {/* Buttons row */}
+                      <div className="flex items-center gap-2">
+                        <ToolbarButtonGroup className="flex-1">
+                          <ToolbarButtonGroupItem className="flex-1 justify-center">A</ToolbarButtonGroupItem>
+                          <ToolbarButtonGroupItem className="flex-1 justify-center">M</ToolbarButtonGroupItem>
+                          <ToolbarButtonGroupItem className="flex-1 justify-center">L</ToolbarButtonGroupItem>
+                        </ToolbarButtonGroup>
+
+                        <ToolbarButton>
+                          <Eye className="size-4" />
+                        </ToolbarButton>
+                        <ToolbarButton>
+                          <Plus className="size-4" />
+                        </ToolbarButton>
+                        <ToolbarButton>
+                          <Trash className="size-4" />
+                        </ToolbarButton>
+                      </div>
                     </div>
                   </div>
                 )}
