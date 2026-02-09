@@ -135,42 +135,53 @@ function TreeItem({
         )}
         onClick={handleClick}
       >
-        {/* Tree lines for non-root items */}
+        {/* Tree connecting lines for non-root items */}
         {level > 0 && (
           <>
-            {/* Vertical lines from parent levels */}
-            {parentLines.map((showLine, idx) => (
-              showLine && (
+            {/* Vertical continuation lines from ancestor levels */}
+            {parentLines.map((showLine, idx) => {
+              // Each entry at idx was pushed by ancestor at level idx.
+              // The continuation line should appear at that ancestor's connector column.
+              // Ancestor at level idx has connector at (idx - 1) * 24 + 20, but idx=0 is root (no connector).
+              if (!showLine || idx === 0) return null;
+              return (
                 <div
                   key={idx}
-                  className="absolute top-0 bottom-0 w-px bg-neutral-100"
-                  style={{ left: `${idx * 24 + 20}px` }}
+                  className="absolute top-0 bottom-0 bg-neutral-100"
+                  style={{
+                    left: `${(idx - 1) * 24 + 20}px`,
+                    width: '1px',
+                  }}
                 />
-              )
-            ))}
+              );
+            })}
 
-            {/* Vertical line continuation for non-last items - goes behind the curve */}
-            {!isLast && (
-              <div
-                className="absolute w-px bg-neutral-100"
-                style={{
-                  left: `${(level - 1) * 24 + 20}px`,
-                  top: 0,
-                  bottom: 0,
-                }}
-              />
-            )}
-
-            {/* Curved connector from parent vertical line to item */}
-            <div
-              className="absolute border-l border-b border-neutral-100 rounded-bl-xl"
+            {/* Connector for this item: vertical line + rounded curve + horizontal line */}
+            {/* Single SVG covers full row height (40px) to prevent sub-pixel gaps */}
+            <svg
+              className="absolute top-0"
               style={{
                 left: `${(level - 1) * 24 + 20}px`,
-                top: 0,
-                width: '12px',
-                height: '20px',
               }}
-            />
+              width="13"
+              height="40"
+              viewBox="0 0 13 40"
+              fill="none"
+            >
+              {/* Vertical line from row top down to curve start at y=12 */}
+              <line x1="0.5" y1="0" x2="0.5" y2="12" stroke="#ced4e0" strokeWidth="1" />
+              {/* Quarter-circle curve (radius 8px) transitioning from vertical to horizontal */}
+              <path
+                d="M0.5 12 C0.5 16.418 4.082 20 8.5 20 L12.5 20"
+                stroke="#ced4e0"
+                strokeWidth="1"
+                fill="none"
+              />
+              {/* Vertical continuation below curve for non-last siblings */}
+              {!isLast && (
+                <line x1="0.5" y1="20" x2="0.5" y2="40" stroke="#ced4e0" strokeWidth="1" />
+              )}
+            </svg>
           </>
         )}
 
