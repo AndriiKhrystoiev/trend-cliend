@@ -12,6 +12,7 @@ import { Card } from "@/components/ui/card";
 
 export default function DashboardPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [isToolbarOpen, setIsToolbarOpen] = useState(false);
 
   return (
@@ -24,19 +25,27 @@ export default function DashboardPage() {
       />
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Desktop Sidebar */}
+        {/* Desktop Sidebar - always visible */}
         <SidebarNav className="hidden lg:flex w-48 shrink-0" />
 
-        {/* Tablet/Mobile Sidebar Overlay */}
+        {/* Tablet Sidebar - collapsible with arrow toggle */}
+        <SidebarNav
+          className="hidden md:flex lg:hidden shrink-0"
+          collapsible
+          collapsed={isSidebarCollapsed}
+          onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        />
+
+        {/* Mobile Sidebar Overlay */}
         {isSidebarOpen && (
           <>
             {/* Backdrop */}
             <div
-              className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+              className="fixed inset-0 z-40 bg-black/50 md:hidden"
               onClick={() => setIsSidebarOpen(false)}
             />
             {/* Sidebar */}
-            <div className="fixed left-0 top-[72px] z-50 h-[calc(100vh-72px)] w-64 lg:hidden">
+            <div className="fixed left-0 top-[72px] z-50 h-[calc(100vh-72px)] w-64 md:hidden">
               <SidebarNav className="h-full" />
             </div>
           </>

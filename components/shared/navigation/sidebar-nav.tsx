@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Folder, Check } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronLeft, Folder, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -250,9 +250,12 @@ function TreeItem({
 
 interface SidebarNavProps {
   className?: string;
+  collapsible?: boolean;
+  collapsed?: boolean;
+  onToggle?: () => void;
 }
 
-export function SidebarNav({ className }: SidebarNavProps) {
+export function SidebarNav({ className, collapsible, collapsed, onToggle }: SidebarNavProps) {
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(
     new Set(["company-1", "location-1", "area-1", "line-1", "process-1"])
   );
@@ -284,38 +287,87 @@ export function SidebarNav({ className }: SidebarNavProps) {
     });
   };
 
-  return (
-    <nav className={cn("flex flex-col bg-white border-r border-neutral-50", className)}>
-      {/* Server Select Dropdown */}
-      <div className="p-3 border-b border-neutral-50">
-        <Select defaultValue="">
-          <SelectTrigger className="w-full border-neutral-100 bg-white text-sm text-neutral-900 hover:bg-neutral-25">
-            <SelectValue placeholder="Select Server" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="server-1">Server 1</SelectItem>
-            <SelectItem value="server-2">Server 2</SelectItem>
-            <SelectItem value="server-3">Server 3</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+  const isCollapsed = collapsible && collapsed;
 
-      {/* Tree Navigation */}
-      <div className="flex-1 overflow-y-auto py-2">
-        {mockTreeData.map((node, index) => (
-          <TreeItem
-            key={node.id}
-            node={node}
-            level={0}
-            expandedNodes={expandedNodes}
-            onToggle={toggleNode}
-            onSelect={toggleTag}
-            selectedTags={selectedTags}
-            isLast={index === mockTreeData.length - 1}
-            parentLines={[]}
-          />
-        ))}
-      </div>
-    </nav>
+  return (
+    <div className={cn("relative", className)}>
+      {/* Collapsed preview: narrow strip with folder icons */}
+      {isCollapsed && (
+        <div className="flex flex-col bg-white border-r border-neutral-50 h-full w-12">
+          {/* Collapsed header area */}
+          <div className="h-12 flex items-center justify-center">
+            <ChevronDown className="size-4 text-neutral-400" />
+          </div>
+
+          {/* Folder icons for top-level items */}
+          <div className="flex-1 flex flex-col items-center gap-1 pb-3">
+            {mockTreeData.map((node) => (
+              <button
+                key={node.id}
+                onClick={() => {
+                  onToggle?.();
+                }}
+                className="flex items-center justify-center size-8 rounded hover:bg-neutral-50 transition-colors"
+              >
+                <Folder className="size-5 text-neutral-300" strokeWidth={1.5} />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Expanded sidebar */}
+      <nav
+        className={cn(
+          "flex flex-col bg-white border-r border-neutral-50 h-full transition-all duration-300 ease-in-out overflow-hidden",
+          isCollapsed ? "w-0 absolute" : "w-full"
+        )}
+      >
+        {/* Server Select Dropdown */}
+        <div className="p-3 border-b border-neutral-50 min-w-48">
+          <Select defaultValue="">
+            <SelectTrigger className="w-full border-neutral-100 bg-white text-sm text-neutral-900 hover:bg-neutral-25">
+              <SelectValue placeholder="Select Server" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="server-1">Server 1</SelectItem>
+              <SelectItem value="server-2">Server 2</SelectItem>
+              <SelectItem value="server-3">Server 3</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Tree Navigation */}
+        <div className="flex-1 overflow-y-auto py-2 min-w-48">
+          {mockTreeData.map((node, index) => (
+            <TreeItem
+              key={node.id}
+              node={node}
+              level={0}
+              expandedNodes={expandedNodes}
+              onToggle={toggleNode}
+              onSelect={toggleTag}
+              selectedTags={selectedTags}
+              isLast={index === mockTreeData.length - 1}
+              parentLines={[]}
+            />
+          ))}
+        </div>
+      </nav>
+
+      {/* Collapse/Expand toggle arrow */}
+      {collapsible && (
+        <button
+          onClick={onToggle}
+          className="absolute top-1/2 -translate-y-1/2 -right-3 z-10 flex items-center justify-center w-6 h-12 bg-white border border-neutral-100 rounded-r-md shadow-sm hover:bg-neutral-25 transition-colors"
+        >
+          {collapsed ? (
+            <ChevronRight className="size-4 text-neutral-500" />
+          ) : (
+            <ChevronLeft className="size-4 text-neutral-500" />
+          )}
+        </button>
+      )}
+    </div>
   );
 }
