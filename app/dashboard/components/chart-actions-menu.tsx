@@ -3,12 +3,10 @@
 import { useState } from "react";
 import {
   X,
-  List,
   Import,
   Share2,
   Printer,
   TextAlignJustify,
-  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Bookmark, CursorClick, CursorClickLine, SaveAs } from "@/components/icons";
@@ -18,16 +16,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ActionButtonProps {
   icon: React.ReactNode;
   active?: boolean;
   onClick?: () => void;
   className?: string;
+  tooltip?: string;
 }
 
-function ActionButton({ icon, active, onClick, className }: ActionButtonProps) {
-  return (
+function ActionButton({ icon, active, onClick, className, tooltip }: ActionButtonProps) {
+  const button = (
     <button
       onClick={onClick}
       className={cn(
@@ -40,6 +45,19 @@ function ActionButton({ icon, active, onClick, className }: ActionButtonProps) {
     >
       <span className="text-neutral-600">{icon}</span>
     </button>
+  );
+
+  if (!tooltip) return button;
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>{button}</TooltipTrigger>
+        <TooltipContent side="left">
+          <p>{tooltip}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 
@@ -174,18 +192,27 @@ export function ChartActionsMenu({ className }: ChartActionsMenuProps) {
 
       {/* Desktop Popover (hidden on mobile and tablets) */}
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className={cn(
-              "size-8 bg-neutral-25 border-neutral-50 rounded text-neutral-600 hover:bg-neutral-50 hidden lg:flex",
-              className
-            )}
-          >
-            {open ? <X className="size-4" /> : <TextAlignJustify className="size-4" />}
-          </Button>
-        </PopoverTrigger>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className={cn(
+                    "size-8 bg-neutral-25 border-neutral-50 rounded text-neutral-600 hover:bg-neutral-50 hidden lg:flex",
+                    className
+                  )}
+                >
+                  {open ? <X className="size-4" /> : <TextAlignJustify className="size-4" />}
+                </Button>
+              </PopoverTrigger>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Open menu</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <PopoverContent
           side="bottom"
           align="center"
@@ -206,48 +233,55 @@ export function ChartActionsMenu({ className }: ChartActionsMenuProps) {
                   active={activeAction === "pencil"}
                   onClick={() => setActiveAction("pencil")}
                   className="rounded-none border-0"
+                  tooltip="Crosshairs Cursor"
                 />
                 <ActionButton
                   icon={<CursorClickLine className="size-4" />}
                   active={activeAction === "hand"}
                   onClick={() => setActiveAction("hand")}
                   className="rounded-none border-0 border-t border-neutral-50"
+                  tooltip="Line Cursor"
                 />
               </div>
 
-              {/* Download button */}
+              {/* Save Trend button */}
               <ActionButton
                 icon={<Import className="size-4" />}
                 active={activeAction === "download"}
                 onClick={() => setActiveAction("download")}
+                tooltip="Save Trend"
               />
 
-              {/* Share button */}
+              {/* Share Trend button */}
               <ActionButton
                 icon={<Share2 className="size-4" />}
                 active={activeAction === "share"}
                 onClick={() => setActiveAction("share")}
+                tooltip="Share Trend"
               />
 
-              {/* Print button */}
+              {/* Print trend button */}
               <ActionButton
                 icon={<Printer className="size-4" />}
                 active={activeAction === "print"}
                 onClick={() => setActiveAction("print")}
+                tooltip="Print trend"
               />
 
-              {/* Save button */}
+              {/* Export trend button */}
               <ActionButton
                 icon={<SaveAs className="size-4" />}
                 active={activeAction === "save"}
                 onClick={() => setActiveAction("save")}
+                tooltip="Export trend"
               />
 
-              {/* BookOpen button */}
+              {/* Add Annotation button */}
               <ActionButton
                 icon={<Bookmark className="size-4" />}
                 active={activeAction === "book"}
                 onClick={() => setActiveAction("book")}
+                tooltip="Add Annotation"
               />
             </div>
           </div>

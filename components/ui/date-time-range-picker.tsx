@@ -12,6 +12,12 @@ import {
 } from "@/components/ui/popover"
 import { format, parse } from "date-fns"
 import { X, Clock } from "lucide-react"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 
 interface DateTimeRangePickerProps {
@@ -76,17 +82,26 @@ export function DateTimeRangePicker({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            "size-8 bg-neutral-25 border-neutral-50 rounded p-0",
-            className
-          )}
-        >
-          <CalendarIcon className="size-4 text-neutral-600" />
-        </Button>
-      </PopoverTrigger>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "size-8 bg-neutral-25 border-neutral-50 rounded p-0",
+                  className
+                )}
+              >
+                <CalendarIcon className="size-4 text-neutral-600" />
+              </Button>
+            </PopoverTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Date/time picker</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <PopoverContent
         className="w-[297px] p-0 bg-transparent shadow-none border-0"
         align="start"

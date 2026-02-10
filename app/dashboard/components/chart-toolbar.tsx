@@ -34,6 +34,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { DateTimeRangePicker } from "@/components/ui/date-time-range-picker";
 import { ChartActionsMenu } from "./chart-actions-menu";
 
@@ -42,10 +48,11 @@ interface ToolbarButtonProps {
   active?: boolean;
   onClick?: () => void;
   className?: string;
+  tooltip?: string;
 }
 
-function ToolbarButton({ icon, active, onClick, className }: ToolbarButtonProps) {
-  return (
+function ToolbarButton({ icon, active, onClick, className, tooltip }: ToolbarButtonProps) {
+  const button = (
     <Button
       variant="outline"
       size="icon"
@@ -60,6 +67,19 @@ function ToolbarButton({ icon, active, onClick, className }: ToolbarButtonProps)
     >
       {icon}
     </Button>
+  );
+
+  if (!tooltip) return button;
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>{button}</TooltipTrigger>
+        <TooltipContent>
+          <p>{tooltip}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 
@@ -117,33 +137,33 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
 
       {/* Zoom Controls Group */}
       <ToolbarGroup>
-        <ToolbarButton icon={<ZoomIn className="size-4" />} />
-        <ToolbarButton icon={<ZoomOut className="size-4" />} />
-        <ToolbarButton icon={<Maximize className="size-4" />} />
-        <ToolbarButton icon={<Refresh className="size-4" />} />
+        <ToolbarButton icon={<ZoomIn className="size-4" />} tooltip="Zoom In" />
+        <ToolbarButton icon={<ZoomOut className="size-4" />} tooltip="Zoom Out" />
+        <ToolbarButton icon={<Maximize className="size-4" />} tooltip="Rubber Band Scaling" />
+        <ToolbarButton icon={<Refresh className="size-4" />} tooltip="Reset zoom" />
       </ToolbarGroup>
 
       {/* Pointer Tools Group */}
       <ToolbarGroup>
-        <ToolbarButton icon={<ChartRefresh className="size-4" />} />
-        <ToolbarButton icon={<Frame className="size-4" />} />
-        <ToolbarButton icon={<ChartGrowUp className="size-4" />} />
-        <ToolbarButton icon={<ChartGrowDown className="size-4" />} />
+        <ToolbarButton icon={<ChartRefresh className="size-4" />} tooltip="Scale current tag to its original scale" />
+        <ToolbarButton icon={<Frame className="size-4" />} tooltip="Auto scale the current tag" />
+        <ToolbarButton icon={<ChartGrowUp className="size-4" />} tooltip="Scale tag up" />
+        <ToolbarButton icon={<ChartGrowDown className="size-4" />} tooltip="Scale tag down" />
       </ToolbarGroup>
 
       {/* Edit Tools Group (neutral variant) */}
       <ToolbarGroup>
-        <ToolbarButton icon={<ChartRefresh2 className="size-4" />} />
-        <ToolbarButton icon={<Frame2 className="size-4" />} />
-        <ToolbarButton icon={<ChartGrowUp2 className="size-4" />} />
-        <ToolbarButton icon={<ChartGrowDown2 className="size-4" />} />
+        <ToolbarButton icon={<ChartRefresh2 className="size-4" />} tooltip="Scale current tag to its original scale" />
+        <ToolbarButton icon={<Frame2 className="size-4" />} tooltip="Auto scale the current tag" />
+        <ToolbarButton icon={<ChartGrowUp2 className="size-4" />} tooltip="Scale tag up" />
+        <ToolbarButton icon={<ChartGrowDown2 className="size-4" />} tooltip="Scale tag down" />
       </ToolbarGroup>
 
       {/* Export & Actions Group */}
       <ToolbarGroup>
-        <ToolbarButton icon={<ChartPie className="size-4" />} />
-        <ToolbarButton icon={<DocumentText className="size-4" />} />
-        <ToolbarButton icon={<Play className="size-4" />} />
+        <ToolbarButton icon={<ChartPie className="size-4" />} tooltip="Show Stats" />
+        <ToolbarButton icon={<DocumentText className="size-4" />} tooltip="Show Annotations" />
+        <ToolbarButton icon={<Play className="size-4" />} tooltip="Live" />
       </ToolbarGroup>
 
       {/* List View Group */}
@@ -178,31 +198,31 @@ export function MobileToolbar({ className }: { className?: string }) {
       {/* Zoom Controls Group */}
       <div className="flex justify-center gap-2">
         <div className="flex flex-col items-center bg-neutral-50 rounded gap-2 p-2 w-12">
-          <ToolbarButton icon={<ZoomIn className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<ZoomOut className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<Maximize className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<Refresh className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<ZoomIn className="size-4" />} className="w-8 h-8" tooltip="Zoom In" />
+          <ToolbarButton icon={<ZoomOut className="size-4" />} className="w-8 h-8" tooltip="Zoom Out" />
+          <ToolbarButton icon={<Maximize className="size-4" />} className="w-8 h-8" tooltip="Rubber Band Scaling" />
+          <ToolbarButton icon={<Refresh className="size-4" />} className="w-8 h-8" tooltip="Reset zoom" />
         </div>
         <div className="flex flex-col items-center bg-neutral-50 rounded gap-2 p-2 w-12">
-          <ToolbarButton icon={<ChartRefresh className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<Frame className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<ChartGrowUp className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<ChartGrowDown className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<ChartRefresh className="size-4" />} className="w-8 h-8" tooltip="Scale current tag to its original scale" />
+          <ToolbarButton icon={<Frame className="size-4" />} className="w-8 h-8" tooltip="Auto scale the current tag" />
+          <ToolbarButton icon={<ChartGrowUp className="size-4" />} className="w-8 h-8" tooltip="Scale tag up" />
+          <ToolbarButton icon={<ChartGrowDown className="size-4" />} className="w-8 h-8" tooltip="Scale tag down" />
         </div>
       </div>
 
       {/* Edit Tools Group */}
       <div className="flex justify-center items-baseline gap-2">
         <div className="flex flex-col items-center bg-neutral-50 rounded gap-2 p-2 w-12">
-          <ToolbarButton icon={<ChartRefresh2 className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<Frame2 className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<ChartGrowUp2 className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<ChartGrowDown2 className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<ChartRefresh2 className="size-4" />} className="w-8 h-8" tooltip="Scale current tag to its original scale" />
+          <ToolbarButton icon={<Frame2 className="size-4" />} className="w-8 h-8" tooltip="Auto scale the current tag" />
+          <ToolbarButton icon={<ChartGrowUp2 className="size-4" />} className="w-8 h-8" tooltip="Scale tag up" />
+          <ToolbarButton icon={<ChartGrowDown2 className="size-4" />} className="w-8 h-8" tooltip="Scale tag down" />
         </div>
         <div className="flex flex-col items-center bg-neutral-50 rounded gap-2 p-2 w-12">
-          <ToolbarButton icon={<ChartPie className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<DocumentText className="size-4" />} className="w-8 h-8" />
-          <ToolbarButton icon={<Play className="size-4" />} className="w-8 h-8" />
+          <ToolbarButton icon={<ChartPie className="size-4" />} className="w-8 h-8" tooltip="Show Annotations" />
+          <ToolbarButton icon={<DocumentText className="size-4" />} className="w-8 h-8" tooltip="Show Stats" />
+          <ToolbarButton icon={<Play className="size-4" />} className="w-8 h-8" tooltip="Live" />
         </div>
       </div>
 
