@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/toolbar-button";
 import { ColorPicker } from "@/components/ui/color-picker";
 import { TagDetailModal } from "@/app/dashboard/components/tag-detail-modal";
+import { CreateTagModal } from "@/app/dashboard/components/create-tag-modal";
 
 interface PenData {
   id: string;
@@ -94,6 +95,7 @@ export function ActivePensTable({ className, selectedRows: controlledSelectedRow
   );
   const [selectedTag, setSelectedTag] = useState<PenData | null>(null);
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
+  const [isCreateTagModalOpen, setIsCreateTagModalOpen] = useState(false);
 
   const handleColorChange = (penId: string, newColor: string) => {
     setPenColors((prev) => ({ ...prev, [penId]: newColor }));
@@ -273,7 +275,7 @@ export function ActivePensTable({ className, selectedRows: controlledSelectedRow
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <ToolbarButton>
+                            <ToolbarButton onClick={() => setIsCreateTagModalOpen(true)}>
                               <Plus className="size-4" />
                             </ToolbarButton>
                           </TooltipTrigger>
@@ -409,7 +411,7 @@ export function ActivePensTable({ className, selectedRows: controlledSelectedRow
                           <ToolbarButton>
                             <Eye className="size-4" />
                           </ToolbarButton>
-                          <ToolbarButton>
+                          <ToolbarButton onClick={() => setIsCreateTagModalOpen(true)}>
                             <Plus className="size-4" />
                           </ToolbarButton>
                           <ToolbarButton>
@@ -431,6 +433,12 @@ export function ActivePensTable({ className, selectedRows: controlledSelectedRow
         open={isTagModalOpen}
         onOpenChange={setIsTagModalOpen}
         tag={selectedTag}
+      />
+
+      {/* Create Tag Modal */}
+      <CreateTagModal
+        open={isCreateTagModalOpen}
+        onOpenChange={setIsCreateTagModalOpen}
       />
     </div>
   );
