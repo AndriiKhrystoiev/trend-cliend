@@ -1,12 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import {
   Calendar,
-  MousePointer,
-  Crosshair,
-  TrendingUp,
-  Copy,
-  FileText,
   Play,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -58,7 +54,7 @@ function ToolbarButton({ icon, active, onClick, className, tooltip }: ToolbarBut
       size="icon"
       onClick={onClick}
       className={cn(
-        "size-8 bg-neutral-25 border-neutral-50 rounded",
+        "size-8 bg-neutral-25 border-neutral-50 rounded cursor-pointer",
         active
           ? "bg-primary-25 border-primary-500 text-primary-500"
           : "text-neutral-600 hover:bg-neutral-50",
@@ -176,11 +172,21 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
 
 // Mobile version - vertical toolbar in a sheet
 export function MobileToolbar({ className }: { className?: string }) {
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
   return (
     <div className={cn("flex flex-col gap-2 pt-2 bg-primary-25", className)}>
       {/* Date Picker & Time Range Group */}
       <div className="flex flex-col gap-2 p-2 mx-2 bg-neutral-50 rounded w-26">
-        <ToolbarButton icon={<Calendar className="size-4" />} className="w-8 justify-center h-8" />
+        {isCalendarOpen ? (
+          <DateTimeRangePicker />
+        ) : (
+          <ToolbarButton 
+            icon={<Calendar className="size-4" />} 
+            className="w-8 justify-center h-8"
+            onClick={() => setIsCalendarOpen(true)}
+          />
+        )}
         <Select defaultValue="1hour">
           <SelectTrigger className="h-10 w-22 border-neutral-50 bg-white text-sm text-neutral-600">
             <SelectValue />

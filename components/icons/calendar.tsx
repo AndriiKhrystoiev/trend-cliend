@@ -1,5 +1,5 @@
 const Calendar = (props) => {
-  const { width = 14, height = 14 } = props;
+  const { color = "#57637B", width = 14, height = 14 } = props;
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -9,7 +9,7 @@ const Calendar = (props) => {
       {...props}
     >
       <path
-        stroke="#57637B"
+        stroke={color}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={2}

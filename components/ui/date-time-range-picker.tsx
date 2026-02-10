@@ -82,35 +82,26 @@ export function DateTimeRangePicker({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "size-8 bg-neutral-25 border-neutral-50 rounded p-0",
-                  className
-                )}
-              >
-                <CalendarIcon className="size-4 text-neutral-600" />
-              </Button>
-            </PopoverTrigger>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Date/time picker</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn(
+            "size-8 bg-neutral-25 border-neutral-50 rounded p-0 cursor-pointer",
+            className
+          )}
+        >
+          <CalendarIcon className="size-4 text-neutral-600" />
+        </Button>
+      </PopoverTrigger>
       <PopoverContent
-        className="w-[297px] p-0 bg-transparent shadow-none border-0"
+        className="w-[297px] p-0 bg-transparent shadow-none border-0 !z-[200]"
         align="start"
       >
         <div className="flex flex-col gap-3">
           {/* Date Input Field - Above dropdown */}
           <div className="w-full pt-4">
             <div className="relative">
-              <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-neutral-400 pointer-events-none z-10" />
+              <CalendarIcon color="#B0B7C8" height="15" width="15" className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
               <input
                 type="text"
                 value={dateInput}

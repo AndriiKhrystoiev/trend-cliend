@@ -38,7 +38,7 @@ function SelectTrigger({
       data-size={size}
       className={cn(
         // Base styles
-        "flex w-full items-center justify-between gap-2 rounded-[4px] border bg-white px-3 py-2 text-sm whitespace-nowrap transition-all outline-none",
+        "flex w-full items-center justify-between gap-2 rounded-[4px] border bg-white px-3 py-2 text-sm whitespace-nowrap transition-all outline-none cursor-pointer",
         // Border and text colors
         "border-neutral-100 text-neutral-900",
         // Placeholder text
