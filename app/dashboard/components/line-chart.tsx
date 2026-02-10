@@ -63,6 +63,32 @@ const formatDateForTooltip = (isoString: string) => {
   return `${dateStr} ${timeStr}`;
 };
 
+// Custom tooltip component
+const CustomTooltip = ({ active, payload }: any) => {
+  if (!active || !payload || !payload.length) return null;
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      {/* Header with gray background */}
+      <div className="bg-neutral-50 px-4 py-2">
+        <p className="text-sm font-semibold text-neutral-900">Data</p>
+      </div>
+      {/* Content */}
+      <div className="px-4 py-3 space-y-2">
+        {payload.map((entry: any, index: number) => (
+          <div key={index} className="flex items-center gap-2">
+            <div
+              className="w-2 h-2 rounded-full shrink-0"
+              style={{ backgroundColor: entry.color }}
+            />
+            <span className="text-sm text-neutral-700">{entry.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // Helper function to create a path with specific rounded corners
 const createRoundedRectPath = (
   x: number,
@@ -243,17 +269,7 @@ export function DashboardLineChart({ className, selectedPenIds }: DashboardLineC
                 domain={[0, 200]}
                 ticks={[0, 50, 100, 150, 200]}
               />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #e5e7eb",
-                  borderRadius: "8px",
-                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                  padding: "12px",
-                }}
-                labelStyle={{ color: "#242a37", fontWeight: 600, marginBottom: "8px" }}
-                labelFormatter={() => "Data"}
-              />
+              <Tooltip content={<CustomTooltip />} />
               <Line
                 type="linear"
                 dataKey="teg1"
@@ -347,8 +363,8 @@ export function DashboardLineChart({ className, selectedPenIds }: DashboardLineC
                   travellerWidth={10}
                 >
                   <LineChart data={miniChartData}>
-                    <Line type="monotone" dataKey="y1" stroke="#3347be" strokeWidth={1} dot={false} />
-                    <Line type="monotone" dataKey="y2" stroke="#22c55e" strokeWidth={1} dot={false} />
+                    <Line type="monotone" dataKey="y1" stroke="#3347be" strokeWidth={3} dot={false} />
+                    <Line type="monotone" dataKey="y2" stroke="#22c55e" strokeWidth={3} dot={false} />
                   </LineChart>
                 </Brush>
               </LineChart>
