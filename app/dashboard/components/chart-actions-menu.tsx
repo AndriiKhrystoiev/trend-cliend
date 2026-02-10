@@ -70,125 +70,108 @@ export function ChartActionsMenu({ className }: ChartActionsMenuProps) {
   const [open, setOpen] = useState(false);
   const [activeAction, setActiveAction] = useState<string>("pointer");
 
-  // Tablet horizontal layout (visible only on md-lg screens)
-  const TabletLayout = () => (
-    <div className="hidden md:flex lg:hidden items-center gap-1 lg:px-2 lg:py-2 bg-primary-25">
-      {/* Grouped buttons */}
-      <div className="flex border overflow-hidden">
-        <ActionButton
-          icon={<CursorClick className="size-4" />}
-          active={activeAction === "pencil"}
-          onClick={() => setActiveAction("pencil")}
-          className="rounded-none border-0"
-        />
-        <ActionButton
-          icon={<CursorClickLine className="size-4" />}
-          active={activeAction === "hand"}
-          onClick={() => setActiveAction("hand")}
-          className="rounded-none border-0 border-l border-neutral-50"
-        />
-      </div>
-
-      {/* Download button */}
-      <ActionButton
-        icon={<Import className="size-4" />}
-        active={activeAction === "download"}
-        onClick={() => setActiveAction("download")}
-      />
-
-      {/* Share button */}
-      <ActionButton
-        icon={<Share2 className="size-4" />}
-        active={activeAction === "share"}
-        onClick={() => setActiveAction("share")}
-      />
-
-      {/* Print button */}
-      <ActionButton
-        icon={<Printer className="size-4" />}
-        active={activeAction === "print"}
-        onClick={() => setActiveAction("print")}
-      />
-
-      {/* Save button */}
-      <ActionButton
-        icon={<SaveAs className="size-4" />}
-        active={activeAction === "save"}
-        onClick={() => setActiveAction("save")}
-      />
-
-      {/* Bookmark button */}
-      <ActionButton
-        icon={<Bookmark className="size-4" />}
-        active={activeAction === "book"}
-        onClick={() => setActiveAction("book")}
-      />
-    </div>
-  );
-
-  // Mobile vertical layout (visible only on small screens)
-  const MobileLayout = () => (
-    <div className="flex md:hidden flex-col gap-1">
-      {/* Grouped buttons */}
-      <div className="flex flex-col border border-neutral-50 rounded overflow-hidden">
-        <ActionButton
-          icon={<CursorClick className="size-4" />}
-          active={activeAction === "pencil"}
-          onClick={() => setActiveAction("pencil")}
-          className="rounded-none border-0"
-        />
-        <ActionButton
-          icon={<CursorClickLine className="size-4" />}
-          active={activeAction === "hand"}
-          onClick={() => setActiveAction("hand")}
-          className="rounded-none border-0 border-t border-neutral-50"
-        />
-      </div>
-
-      {/* Download button */}
-      <ActionButton
-        icon={<Import className="size-4" />}
-        active={activeAction === "download"}
-        onClick={() => setActiveAction("download")}
-      />
-
-      {/* Share button */}
-      <ActionButton
-        icon={<Share2 className="size-4" />}
-        active={activeAction === "share"}
-        onClick={() => setActiveAction("share")}
-      />
-
-      {/* Print button */}
-      <ActionButton
-        icon={<Printer className="size-4" />}
-        active={activeAction === "print"}
-        onClick={() => setActiveAction("print")}
-      />
-
-      {/* Save button */}
-      <ActionButton
-        icon={<SaveAs className="size-4" />}
-        active={activeAction === "save"}
-        onClick={() => setActiveAction("save")}
-      />
-
-      {/* Bookmark button */}
-      <ActionButton
-        icon={<Bookmark className="size-4" />}
-        active={activeAction === "book"}
-        onClick={() => setActiveAction("book")}
-      />
-    </div>
-  );
-
   return (
     <>
       {/* Mobile layout */}
-      <MobileLayout />
-      
+      <div className="flex md:hidden flex-col gap-1">
+        {/* Grouped buttons */}
+        <div className="flex flex-col border border-neutral-50 rounded overflow-hidden">
+          <ActionButton
+            icon={<CursorClick className="size-4" />}
+            active={activeAction === "pencil"}
+            onClick={() => setActiveAction("pencil")}
+            className="rounded-none border-0"
+            tooltip="Crosshairs Cursor"
+          />
+          <ActionButton
+            icon={<CursorClickLine className="size-4" />}
+            active={activeAction === "hand"}
+            onClick={() => setActiveAction("hand")}
+            className="rounded-none border-0 border-t border-neutral-50"
+            tooltip="Line Cursor"
+          />
+        </div>
+        <ActionButton
+          icon={<Import className="size-4" />}
+          active={activeAction === "download"}
+          onClick={() => setActiveAction("download")}
+          tooltip="Save Trend"
+        />
+        <ActionButton
+          icon={<Share2 className="size-4" />}
+          active={activeAction === "share"}
+          onClick={() => setActiveAction("share")}
+          tooltip="Share Trend"
+        />
+        <ActionButton
+          icon={<Printer className="size-4" />}
+          active={activeAction === "print"}
+          onClick={() => setActiveAction("print")}
+          tooltip="Print trend"
+        />
+        <ActionButton
+          icon={<SaveAs className="size-4" />}
+          active={activeAction === "save"}
+          onClick={() => setActiveAction("save")}
+          tooltip="Export trend"
+        />
+        <ActionButton
+          icon={<Bookmark className="size-4" />}
+          active={activeAction === "book"}
+          onClick={() => setActiveAction("book")}
+          tooltip="Add Annotation"
+        />
+      </div>
+
       {/* Tablet layout */}
-      <TabletLayout />
+      <div className="hidden md:flex lg:hidden items-center gap-1 lg:px-2 lg:py-2 bg-primary-25">
+        <div className="flex border overflow-hidden">
+          <ActionButton
+            icon={<CursorClick className="size-4" />}
+            active={activeAction === "pencil"}
+            onClick={() => setActiveAction("pencil")}
+            className="rounded-none border-0"
+            tooltip="Crosshairs Cursor"
+          />
+          <ActionButton
+            icon={<CursorClickLine className="size-4" />}
+            active={activeAction === "hand"}
+            onClick={() => setActiveAction("hand")}
+            className="rounded-none border-0 border-l border-neutral-50"
+            tooltip="Line Cursor"
+          />
+        </div>
+        <ActionButton
+          icon={<Import className="size-4" />}
+          active={activeAction === "download"}
+          onClick={() => setActiveAction("download")}
+          tooltip="Save Trend"
+        />
+        <ActionButton
+          icon={<Share2 className="size-4" />}
+          active={activeAction === "share"}
+          onClick={() => setActiveAction("share")}
+          tooltip="Share Trend"
+        />
+        <ActionButton
+          icon={<Printer className="size-4" />}
+          active={activeAction === "print"}
+          onClick={() => setActiveAction("print")}
+          tooltip="Print trend"
+        />
+        <ActionButton
+          icon={<SaveAs className="size-4" />}
+          active={activeAction === "save"}
+          onClick={() => setActiveAction("save")}
+          tooltip="Export trend"
+        />
+        <ActionButton
+          icon={<Bookmark className="size-4" />}
+          active={activeAction === "book"}
+          onClick={() => setActiveAction("book")}
+          tooltip="Add Annotation"
+        />
+      </div>
 
       {/* Desktop Popover (hidden on mobile and tablets) */}
       <Popover open={open} onOpenChange={setOpen}>
