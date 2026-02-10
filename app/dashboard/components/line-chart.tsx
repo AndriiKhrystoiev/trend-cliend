@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo, useRef } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Brush } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Brush, ReferenceArea } from "recharts";
 import { cn } from "@/lib/utils";
 
 // Generate time-based data for the mini timeline
@@ -35,8 +35,15 @@ const chartData = [
   { time: "17:00:00 PM", teg1: 45, teg2: 150 },
 ];
 
+// Map pen IDs to chart dataKeys and colors
+const penToChartMap: Record<string, { dataKey: string; color: string }> = {
+  "1": { dataKey: "teg2", color: "#57637B" },
+  "2": { dataKey: "teg1", color: "#57637B" },
+};
+
 interface DashboardLineChartProps {
   className?: string;
+  selectedPenIds?: Set<string>;
 }
 
 // Format date for tooltip display
@@ -124,7 +131,7 @@ const SmartTraveller = (props: { x: number; y: number; width: number; height: nu
   );
 };
 
-export function DashboardLineChart({ className }: DashboardLineChartProps) {
+export function DashboardLineChart({ className, selectedPenIds }: DashboardLineChartProps) {
   const [brushRange, setBrushRange] = useState({ startIndex: 0, endIndex: 99 });
   const [isDragging, setIsDragging] = useState(false);
   const [hoverInfo, setHoverInfo] = useState<{ x: number; date: string } | null>(null);
@@ -186,6 +193,21 @@ export function DashboardLineChart({ className }: DashboardLineChartProps) {
     return (brushRange.endIndex / (miniChartData.length - 1)) * 100;
   }, [brushRange.endIndex]);
 
+  // Compute highlight areas for selected pens
+  const highlightAreas = useMemo(() => {
+    if (!selectedPenIds || selectedPenIds.size === 0) return [];
+    return Array.from(selectedPenIds)
+      .map((penId) => {
+        const mapping = penToChartMap[penId];
+        if (!mapping) return null;
+        const values = chartData.map((d) => d[mapping.dataKey as keyof typeof d] as number);
+        const minVal = Math.min(...values);
+        const maxVal = Math.max(...values);
+        return { color: mapping.color, y1: minVal, y2: maxVal };
+      })
+      .filter(Boolean) as { color: string; y1: number; y2: number }[];
+  }, [selectedPenIds]);
+
   // Check if range is not full (user has adjusted it)
   const isRangeAdjusted = brushRange.startIndex > 0 || brushRange.endIndex < 99;
 
@@ -197,6 +219,16 @@ export function DashboardLineChart({ className }: DashboardLineChartProps) {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 10 }}>
               <CartesianGrid strokeDasharray="0" stroke="#e5e7eb" horizontal={true} vertical={false} />
+              {highlightAreas.map((area, i) => (
+                <ReferenceArea
+                  key={i}
+                  y1={area.y1}
+                  y2={area.y2}
+                  fill={area.color}
+                  fillOpacity={0.1}
+                  stroke="none"
+                />
+              ))}
               <XAxis
                 dataKey="time"
                 axisLine={false}

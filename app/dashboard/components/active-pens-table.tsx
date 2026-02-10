@@ -80,11 +80,15 @@ const mockPensData: PenData[] = [
 
 interface ActivePensTableProps {
   className?: string;
+  selectedRows?: Set<string>;
+  onSelectedRowsChange?: (rows: Set<string>) => void;
 }
 
-export function ActivePensTable({ className }: ActivePensTableProps) {
+export function ActivePensTable({ className, selectedRows: controlledSelectedRows, onSelectedRowsChange }: ActivePensTableProps) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
-  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+  const [internalSelectedRows, setInternalSelectedRows] = useState<Set<string>>(new Set());
+  const selectedRows = controlledSelectedRows ?? internalSelectedRows;
+  const setSelectedRows = onSelectedRowsChange ?? setInternalSelectedRows;
   const [penColors, setPenColors] = useState<Record<string, string>>(() =>
     mockPensData.reduce((acc, pen) => ({ ...acc, [pen.id]: pen.color }), {})
   );
@@ -108,15 +112,13 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
   };
 
   const toggleSelection = (id: string) => {
-    setSelectedRows((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
+    const next = new Set(selectedRows);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
+    setSelectedRows(next);
   };
 
   const toggleAllSelection = () => {

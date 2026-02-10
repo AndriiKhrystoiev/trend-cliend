@@ -14,6 +14,7 @@ export default function DashboardPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [isToolbarOpen, setIsToolbarOpen] = useState(false);
+  const [selectedPenIds, setSelectedPenIds] = useState<Set<string>>(new Set());
 
   return (
     <div className="flex h-screen flex-col bg-neutral-25">
@@ -78,11 +79,14 @@ export default function DashboardPage() {
               </div>
 
               {/* Chart Area */}
-              <DashboardLineChart />
+              <DashboardLineChart selectedPenIds={selectedPenIds} />
 
               {/* Active Pens Table - Inside the same card */}
               <div className="mt-6">
-                <ActivePensTable />
+                <ActivePensTable
+                  selectedRows={selectedPenIds}
+                  onSelectedRowsChange={setSelectedPenIds}
+                />
               </div>
             </Card>
           </div>
