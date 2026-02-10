@@ -33,6 +33,7 @@ import {
   ToolbarButtonGroupItem,
 } from "@/components/ui/toolbar-button";
 import { ColorPicker } from "@/components/ui/color-picker";
+import { TagDetailModal } from "@/app/dashboard/components/tag-detail-modal";
 
 interface PenData {
   id: string;
@@ -87,6 +88,8 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
   const [penColors, setPenColors] = useState<Record<string, string>>(() =>
     mockPensData.reduce((acc, pen) => ({ ...acc, [pen.id]: pen.color }), {})
   );
+  const [selectedTag, setSelectedTag] = useState<PenData | null>(null);
+  const [isTagModalOpen, setIsTagModalOpen] = useState(false);
 
   const handleColorChange = (penId: string, newColor: string) => {
     setPenColors((prev) => ({ ...prev, [penId]: newColor }));
@@ -195,7 +198,15 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
                     />
                   </TableCell>
                   <TableCell className="font-medium text-primary-500">
-                    {pen.tagName}
+                    <button
+                      className="hover:underline cursor-pointer text-left"
+                      onClick={() => {
+                        setSelectedTag(pen);
+                        setIsTagModalOpen(true);
+                      }}
+                    >
+                      {pen.tagName}
+                    </button>
                   </TableCell>
                   <TableCell className="text-neutral-400">{pen.description}</TableCell>
                   <TableCell className="text-neutral-400">
@@ -291,7 +302,15 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
                       className="mt-1"
                     />
                     <div className="flex-1">
-                      <p className="font-medium text-sm text-primary-500 break-words">{pen.tagName}</p>
+                      <button
+                        className="font-medium text-sm text-primary-500 break-words hover:underline cursor-pointer text-left"
+                        onClick={() => {
+                          setSelectedTag(pen);
+                          setIsTagModalOpen(true);
+                        }}
+                      >
+                        {pen.tagName}
+                      </button>
                     </div>
                   </div>
                   <Button
@@ -370,22 +389,28 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
                       </div>
 
                       {/* Buttons row */}
-                      <div className="flex items-center gap-2">
-                        <ToolbarButtonGroup className="flex-1">
-                          <ToolbarButtonGroupItem className="flex-1 justify-center">A</ToolbarButtonGroupItem>
-                          <ToolbarButtonGroupItem className="flex-1 justify-center">M</ToolbarButtonGroupItem>
-                          <ToolbarButtonGroupItem className="flex-1 justify-center">L</ToolbarButtonGroupItem>
-                        </ToolbarButtonGroup>
+                      <div className="flex gap-2 flex-col">
+                        <div className="flex items-center gap-2">
+                          <ToolbarButtonGroup className="flex-1">
+                            <ToolbarButtonGroupItem className="flex-1 justify-center w-10">A</ToolbarButtonGroupItem>
+                            <ToolbarButtonGroupItem className="flex-1 justify-center w-10">M</ToolbarButtonGroupItem>
+                          </ToolbarButtonGroup>
 
-                        <ToolbarButton>
-                          <Eye className="size-4" />
-                        </ToolbarButton>
-                        <ToolbarButton>
-                          <Plus className="size-4" />
-                        </ToolbarButton>
-                        <ToolbarButton>
-                          <Trash className="size-4" />
-                        </ToolbarButton>
+                          <ToolbarButton className="w-10">
+                            L
+                          </ToolbarButton>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <ToolbarButton>
+                            <Eye className="size-4" />
+                          </ToolbarButton>
+                          <ToolbarButton>
+                            <Plus className="size-4" />
+                          </ToolbarButton>
+                          <ToolbarButton>
+                            <Trash className="size-4" />
+                          </ToolbarButton>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -395,6 +420,13 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
           })}
         </div>
       </div>
+
+      {/* Tag Detail Modal */}
+      <TagDetailModal
+        open={isTagModalOpen}
+        onOpenChange={setIsTagModalOpen}
+        tag={selectedTag}
+      />
     </div>
   );
 }
