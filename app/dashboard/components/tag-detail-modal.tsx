@@ -50,7 +50,7 @@ export function TagDetailModal({ open, onOpenChange, tag }: TagDetailModalProps)
         </DialogHeader>
 
         {/* Form fields */}
-        <div className="space-y-4">
+        <div className="space-y-4 overflow-y-auto max-sm:max-h-[400px] pr-1">
           <Input label="Tag name" readOnly value={tag.tagName} size="lg" />
           <Input label="I/O" readOnly value={tag.io} size="lg"  />
           <Input label="Server" readOnly value={tag.server} size="lg" />

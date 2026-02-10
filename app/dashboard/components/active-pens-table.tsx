@@ -166,7 +166,7 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
         <div className="hidden md:block overflow-x-auto">
           <Table>
             <TableHeader className="bg-base-50">
-              <TableRow className="border-b border-neutral-100 bg-transparent hover:bg-transparent">
+              <TableRow className="border-none bg-transparent hover:bg-transparent h-12">
                 <TableHead className="w-12">
                   <Checkbox
                     checked={selectedRows.size === mockPensData.length}
@@ -189,7 +189,10 @@ export function ActivePensTable({ className }: ActivePensTableProps) {
               {mockPensData.map((pen) => (
                 <TableRow
                   key={pen.id}
-                  className="border-b border-neutral-100 hover:bg-neutral-25"
+                  className={cn(
+                    "border-none hover:bg-neutral-25",
+                    selectedRows.has(pen.id) && "bg-primary-25"
+                  )}
                 >
                   <TableCell>
                     <Checkbox
