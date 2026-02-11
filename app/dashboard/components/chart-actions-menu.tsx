@@ -22,6 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { SaveTrendModal } from "./save-trend-modal";
 
 interface ActionButtonProps {
   icon: React.ReactNode;
@@ -70,6 +71,7 @@ interface ChartActionsMenuProps {
 
 export function ChartActionsMenu({ className, activeAction: controlledActiveAction, onActiveActionChange }: ChartActionsMenuProps) {
   const [open, setOpen] = useState(false);
+  const [isSaveTrendOpen, setIsSaveTrendOpen] = useState(false);
   const [internalActiveAction, setInternalActiveAction] = useState<string>("hand");
   const activeAction = controlledActiveAction ?? internalActiveAction;
   const setActiveAction = onActiveActionChange ?? setInternalActiveAction;
@@ -98,7 +100,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
         <ActionButton
           icon={<Import className="size-4" />}
           active={activeAction === "download"}
-          onClick={() => setActiveAction("download")}
+          onClick={() => setIsSaveTrendOpen(true)}
           tooltip="Save Trend"
         />
         <ActionButton
@@ -148,7 +150,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
         <ActionButton
           icon={<Import className="size-4" />}
           active={activeAction === "download"}
-          onClick={() => setActiveAction("download")}
+          onClick={() => setIsSaveTrendOpen(true)}
           tooltip="Save Trend"
         />
         <ActionButton
@@ -235,7 +237,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
               <ActionButton
                 icon={<Import className="size-4" />}
                 active={activeAction === "download"}
-                onClick={() => setActiveAction("download")}
+                onClick={() => setIsSaveTrendOpen(true)}
                 tooltip="Save Trend"
               />
 
@@ -274,6 +276,8 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
           </div>
         </PopoverContent>
       </Popover>
+
+      <SaveTrendModal open={isSaveTrendOpen} onOpenChange={setIsSaveTrendOpen} />
     </>
   );
 }
