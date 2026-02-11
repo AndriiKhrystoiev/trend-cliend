@@ -45,6 +45,8 @@ function FolderRow({
   expanded,
   onToggle,
   onAdd,
+  isLast,
+  parentLines,
 }: {
   name: string;
   depth: number;
@@ -52,13 +54,58 @@ function FolderRow({
   expanded: boolean;
   onToggle: () => void;
   onAdd: () => void;
+  isLast: boolean;
+  parentLines: boolean[];
 }) {
   return (
-    <div
-      className="flex items-center justify-between py-1.5 rounded"
-      style={{ paddingLeft: depth * 24 }}
-    >
-      <div className="flex items-center gap-2 min-w-0 flex-1">
+    <div className="relative flex items-center justify-between py-1.5 rounded h-10">
+      {/* Tree connecting lines for non-root items */}
+      {depth > 0 && (
+        <>
+          {/* Vertical continuation lines from ancestor levels */}
+          {parentLines.map((showLine, idx) => {
+            if (!showLine || idx === 0) return null;
+            return (
+              <div
+                key={idx}
+                className="absolute top-0 bottom-0 bg-neutral-100"
+                style={{
+                  left: `${(idx - 1) * 24 + 20}px`,
+                  width: '1px',
+                }}
+              />
+            );
+          })}
+
+          {/* Connector for this item: vertical line + rounded curve + horizontal line */}
+          <svg
+            className="absolute top-0"
+            style={{
+              left: `${(depth - 1) * 24 + 20}px`,
+            }}
+            width="13"
+            height="40"
+            viewBox="0 0 13 40"
+            fill="none"
+          >
+            {/* Vertical line from row top down to curve start at y=12 */}
+            <line x1="0.5" y1="0" x2="0.5" y2="12" stroke="#ced4e0" strokeWidth="1" />
+            {/* Quarter-circle curve (radius 8px) transitioning from vertical to horizontal */}
+            <path
+              d="M0.5 12 C0.5 16.418 4.082 20 8.5 20 L12.5 20"
+              stroke="#ced4e0"
+              strokeWidth="1"
+              fill="none"
+            />
+            {/* Vertical continuation below curve for non-last siblings */}
+            {!isLast && (
+              <line x1="0.5" y1="20" x2="0.5" y2="40" stroke="#ced4e0" strokeWidth="1" />
+            )}
+          </svg>
+        </>
+      )}
+
+      <div className="flex items-center gap-2 min-w-0 flex-1 pl-3" style={{ marginLeft: `${depth * 24}px` }}>
         {hasChildren ? (
           <button
             onClick={onToggle}
@@ -114,8 +161,8 @@ function NewFolderInput({
 
   return (
     <div
-      className="flex items-center gap-2 py-1.5"
-      style={{ paddingLeft: depth * 24 }}
+      className="flex items-center gap-2 py-1.5 pl-3"
+      style={{ marginLeft: `${depth * 24}px` }}
     >
       <span className="w-4 shrink-0" />
       <Folder className="size-4 text-neutral-400 shrink-0" />
@@ -194,12 +241,16 @@ export function SaveTrendModal({ open, onOpenChange }: SaveTrendModalProps) {
     setNewFolderParentId(null);
   };
 
-  const renderTree = (nodes: FolderNode[], depth: number): React.ReactNode => {
-    return nodes.map((folder) => {
+  const renderTree = (nodes: FolderNode[], depth: number, parentLines: boolean[] = []): React.ReactNode => {
+    return nodes.map((folder, index) => {
       const hasChildren = !!(folder.children && folder.children.length > 0);
       const isExpanded = expandedIds.has(folder.id);
       const isAddingHere = newFolderParentId === folder.id;
       const showChildren = isExpanded && hasChildren;
+      const isLast = index === nodes.length - 1;
+
+      // Build parentLines for children: current depth needs a line if not last sibling
+      const childParentLines = [...parentLines, !isLast];
 
       return (
         <div key={folder.id}>
@@ -210,15 +261,21 @@ export function SaveTrendModal({ open, onOpenChange }: SaveTrendModalProps) {
             expanded={isExpanded}
             onToggle={() => toggleExpand(folder.id)}
             onAdd={() => handleAddFolder(folder.id)}
+            isLast={isLast}
+            parentLines={parentLines}
           />
           {(showChildren || isAddingHere) && (
             <div className="relative">
-              {/* Tree connector line */}
-              <div
-                className="absolute top-0 bottom-0 w-px bg-neutral-100"
-                style={{ left: depth * 24 + 12 }}
-              />
-              {showChildren && renderTree(folder.children!, depth + 1)}
+              {/* Vertical continuation line for expanded parent */}
+              {showChildren && (
+                <div
+                  className="absolute top-0 bottom-0 w-px bg-neutral-100"
+                  style={{
+                    left: `${depth * 24 + 20}px`,
+                  }}
+                />
+              )}
+              {showChildren && renderTree(folder.children!, depth + 1, childParentLines)}
               {isAddingHere && (
                 <NewFolderInput
                   depth={depth + 1}
