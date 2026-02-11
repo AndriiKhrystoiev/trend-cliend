@@ -37,21 +37,6 @@ export default function DashboardPage() {
           onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         />
 
-        {/* Mobile Sidebar Overlay */}
-        {isSidebarOpen && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 z-100 bg-black/50 md:hidden"
-              onClick={() => setIsSidebarOpen(false)}
-            />
-            {/* Sidebar */}
-            <div className="fixed left-0 top-[72px] z-50 h-[calc(100vh-72px)] w-64 md:hidden">
-              <SidebarNav className="h-full" />
-            </div>
-          </>
-        )}
-
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto">
           <div className="p-4">
@@ -93,16 +78,27 @@ export default function DashboardPage() {
         </main>
       </div>
 
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-450 bg-black/50 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+          <div className="fixed left-0 top-18 z-450 h-[calc(100vh-72px)] w-64 md:hidden">
+            <SidebarNav className="h-full" />
+          </div>
+        </>
+      )}
+
       {/* Mobile Toolbar Sheet */}
       {isToolbarOpen && (
         <>
-          {/* Backdrop */}
           <div
-            className="fixed inset-0 z-40 bg-black/50 md:hidden"
+            className="fixed inset-0 z-450 bg-black/50 md:hidden"
             onClick={() => setIsToolbarOpen(false)}
           />
-          {/* Toolbar Sheet */}
-          <div className="fixed right-0 top-0 z-100 h-full w-[120px] bg-primary-25 shadow-xl md:hidden overflow-y-auto">
+          <div className="fixed right-0 top-0 z-450 h-full w-[120px] bg-primary-25 shadow-xl md:hidden overflow-y-auto">
             <div className="flex items-center justify-end p-4 border-b border-neutral-50">
               <Button
                 variant="ghost"
