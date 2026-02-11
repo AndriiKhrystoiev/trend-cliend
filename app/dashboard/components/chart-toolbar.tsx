@@ -39,6 +39,7 @@ import {
 import { DateTimeRangePicker } from "@/components/ui/date-time-range-picker";
 import { ChartActionsMenu } from "./chart-actions-menu";
 import { StatsModal } from "./stats-modal";
+import { AnnotationsModal } from "./annotations-modal";
 
 interface ToolbarButtonProps {
   icon: React.ReactNode;
@@ -107,6 +108,7 @@ interface ChartToolbarProps {
 
 export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00", className }: ChartToolbarProps) {
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
+  const [isAnnotationsModalOpen, setIsAnnotationsModalOpen] = useState(false);
 
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
@@ -161,7 +163,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
       {/* Export & Actions Group */}
       <ToolbarGroup>
         <ToolbarButton icon={<ChartPie className="size-4" />} tooltip="Show Stats" onClick={() => setIsStatsModalOpen(true)} />
-        <ToolbarButton icon={<DocumentText className="size-4" />} tooltip="Show Annotations" />
+        <ToolbarButton icon={<DocumentText className="size-4" />} tooltip="Show Annotations" onClick={() => setIsAnnotationsModalOpen(true)} />
         <ToolbarButton icon={<Play className="size-4" />} tooltip="Live" />
       </ToolbarGroup>
 
@@ -171,6 +173,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
       </ToolbarGroup>
 
       <StatsModal open={isStatsModalOpen} onOpenChange={setIsStatsModalOpen} />
+      <AnnotationsModal open={isAnnotationsModalOpen} onOpenChange={setIsAnnotationsModalOpen} />
     </div>
   );
 }
@@ -179,6 +182,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
 export function MobileToolbar({ className }: { className?: string }) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
+  const [isAnnotationsModalOpen, setIsAnnotationsModalOpen] = useState(false);
 
   return (
     <div className={cn("flex flex-col gap-2 pt-2 bg-primary-25", className)}>
@@ -233,7 +237,7 @@ export function MobileToolbar({ className }: { className?: string }) {
         </div>
         <div className="flex flex-col items-center bg-neutral-50 rounded gap-2 p-2 w-12">
           <ToolbarButton icon={<ChartPie className="size-4" />} className="w-8 h-8" tooltip="Show Annotations" onClick={() => setIsStatsModalOpen(true)} />
-          <ToolbarButton icon={<DocumentText className="size-4" />} className="w-8 h-8" tooltip="Show Stats" />
+          <ToolbarButton icon={<DocumentText className="size-4" />} className="w-8 h-8" tooltip="Show Annotations" onClick={() => setIsAnnotationsModalOpen(true)} />
           <ToolbarButton icon={<Play className="size-4" />} className="w-8 h-8" tooltip="Live" />
         </div>
       </div>
@@ -244,6 +248,7 @@ export function MobileToolbar({ className }: { className?: string }) {
       </div>
 
       <StatsModal open={isStatsModalOpen} onOpenChange={setIsStatsModalOpen} />
+      <AnnotationsModal open={isAnnotationsModalOpen} onOpenChange={setIsAnnotationsModalOpen} />
     </div>
   );
 }

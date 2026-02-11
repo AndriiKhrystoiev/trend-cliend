@@ -7,6 +7,7 @@ export { default as ChartGrowUp2 } from "./chart-grow-up-2";
 export { default as ChartPie } from "./chart-pie";
 export { default as ChartRefresh } from "./chart-refresh";
 export { default as ChartRefresh2 } from "./chart-refresh-2";
+export { default as Clock } from "./clock";
 export { default as CursorClick } from "./cursor-click";
 export { default as CursorClickLine } from "./cursor-click-line";
 export { default as DocumentText } from "./document-text";
