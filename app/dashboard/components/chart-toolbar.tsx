@@ -104,9 +104,11 @@ function ToolbarGroup({ children, variant = "primary" }: ToolbarGroupProps) {
 interface ChartToolbarProps {
   dateRange?: string;
   className?: string;
+  activeAction?: string;
+  onActiveActionChange?: (action: string) => void;
 }
 
-export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00", className }: ChartToolbarProps) {
+export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00", className, activeAction, onActiveActionChange }: ChartToolbarProps) {
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
   const [isAnnotationsModalOpen, setIsAnnotationsModalOpen] = useState(false);
 
@@ -169,7 +171,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
 
       {/* List View Group */}
       <ToolbarGroup>
-        <ChartActionsMenu />
+        <ChartActionsMenu activeAction={activeAction} onActiveActionChange={onActiveActionChange} />
       </ToolbarGroup>
 
       <StatsModal open={isStatsModalOpen} onOpenChange={setIsStatsModalOpen} />
@@ -179,7 +181,7 @@ export function ChartToolbar({ dateRange = "09/14/2025 14:00 - 09/14/2025 21:00"
 }
 
 // Mobile version - vertical toolbar in a sheet
-export function MobileToolbar({ className }: { className?: string }) {
+export function MobileToolbar({ className, activeAction, onActiveActionChange }: { className?: string; activeAction?: string; onActiveActionChange?: (action: string) => void }) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
   const [isAnnotationsModalOpen, setIsAnnotationsModalOpen] = useState(false);
@@ -244,7 +246,7 @@ export function MobileToolbar({ className }: { className?: string }) {
 
       {/* Actions Menu Group */}
       <div className="p-2 mx-2 bg-neutral-50 rounded w-12">
-        <ChartActionsMenu />
+        <ChartActionsMenu activeAction={activeAction} onActiveActionChange={onActiveActionChange} />
       </div>
 
       <StatsModal open={isStatsModalOpen} onOpenChange={setIsStatsModalOpen} />

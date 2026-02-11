@@ -44,6 +44,7 @@ const penToChartMap: Record<string, { dataKey: string; color: string }> = {
 interface DashboardLineChartProps {
   className?: string;
   selectedPenIds?: Set<string>;
+  crosshairActive?: boolean;
 }
 
 // Format date for tooltip display
@@ -157,11 +158,23 @@ const SmartTraveller = (props: { x: number; y: number; width: number; height: nu
   );
 };
 
-export function DashboardLineChart({ className, selectedPenIds }: DashboardLineChartProps) {
+export function DashboardLineChart({ className, selectedPenIds, crosshairActive }: DashboardLineChartProps) {
   const [brushRange, setBrushRange] = useState({ startIndex: 0, endIndex: 99 });
   const [isDragging, setIsDragging] = useState(false);
   const [hoverInfo, setHoverInfo] = useState<{ x: number; date: string } | null>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const [crosshairY, setCrosshairY] = useState<number | null>(null);
+
+  const handleChartMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!chartContainerRef.current) return;
+    const rect = chartContainerRef.current.getBoundingClientRect();
+    setCrosshairY(e.clientY - rect.top);
+  }, []);
+
+  const handleChartMouseLeave = useCallback(() => {
+    setCrosshairY(null);
+  }, []);
 
   const handleBrushChange = useCallback((range: { startIndex?: number; endIndex?: number }) => {
     if (range.startIndex !== undefined && range.endIndex !== undefined) {
@@ -240,7 +253,12 @@ export function DashboardLineChart({ className, selectedPenIds }: DashboardLineC
   return (
     <div className={cn(className)}>
       {/* Main Chart */}
-      <div className="h-[300px] md:h-[350px] overflow-x-auto">
+      <div
+        ref={chartContainerRef}
+        className={cn("h-75 md:h-87.5 overflow-x-auto relative", crosshairActive && "cursor-crosshair")}
+        onMouseMove={crosshairActive ? handleChartMouseMove : undefined}
+        onMouseLeave={crosshairActive ? handleChartMouseLeave : undefined}
+      >
         <div className="min-w-[600px] h-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 10 }}>
@@ -269,7 +287,10 @@ export function DashboardLineChart({ className, selectedPenIds }: DashboardLineC
                 domain={[0, 200]}
                 ticks={[0, 50, 100, 150, 200]}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ stroke: '#9ca3af', strokeDasharray: '5 5', strokeWidth: 1 }}
+              />
               <Line
                 type="linear"
                 dataKey="teg1"
@@ -291,6 +312,21 @@ export function DashboardLineChart({ className, selectedPenIds }: DashboardLineC
             </LineChart>
           </ResponsiveContainer>
         </div>
+
+        {/* Horizontal crosshair line */}
+        {crosshairActive && crosshairY !== null && (
+          <svg className="absolute inset-0 w-full h-full pointer-events-none">
+            <line
+              x1="0"
+              y1={crosshairY}
+              x2="100%"
+              y2={crosshairY}
+              stroke="#9ca3af"
+              strokeDasharray="5 5"
+              strokeWidth={1}
+            />
+          </svg>
+        )}
       </div>
 
       {/* Timeline Section */}

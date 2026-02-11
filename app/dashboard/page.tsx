@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [isToolbarOpen, setIsToolbarOpen] = useState(false);
   const [selectedPenIds, setSelectedPenIds] = useState<Set<string>>(new Set());
+  const [activeAction, setActiveAction] = useState("hand");
 
   return (
     <div className="flex h-screen flex-col bg-neutral-25">
@@ -60,11 +61,11 @@ export default function DashboardPage() {
 
               {/* Desktop/Tablet: Toolbar Row */}
               <div className="hidden md:block mb-6">
-                <ChartToolbar />
+                <ChartToolbar activeAction={activeAction} onActiveActionChange={setActiveAction} />
               </div>
 
               {/* Chart Area */}
-              <DashboardLineChart selectedPenIds={selectedPenIds} />
+              <DashboardLineChart selectedPenIds={selectedPenIds} crosshairActive={activeAction === "pencil"} />
 
               {/* Active Pens Table - Inside the same card */}
               <div className="mt-6">
@@ -109,7 +110,7 @@ export default function DashboardPage() {
                 <X className="size-5" />
               </Button>
             </div>
-            <MobileToolbar />
+            <MobileToolbar activeAction={activeAction} onActiveActionChange={setActiveAction} />
           </div>
         </>
       )}

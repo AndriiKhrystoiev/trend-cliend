@@ -64,11 +64,15 @@ function ActionButton({ icon, active, onClick, className, tooltip }: ActionButto
 interface ChartActionsMenuProps {
   onClose?: () => void;
   className?: string;
+  activeAction?: string;
+  onActiveActionChange?: (action: string) => void;
 }
 
-export function ChartActionsMenu({ className }: ChartActionsMenuProps) {
+export function ChartActionsMenu({ className, activeAction: controlledActiveAction, onActiveActionChange }: ChartActionsMenuProps) {
   const [open, setOpen] = useState(false);
-  const [activeAction, setActiveAction] = useState<string>("pointer");
+  const [internalActiveAction, setInternalActiveAction] = useState<string>("hand");
+  const activeAction = controlledActiveAction ?? internalActiveAction;
+  const setActiveAction = onActiveActionChange ?? setInternalActiveAction;
 
   return (
     <>
