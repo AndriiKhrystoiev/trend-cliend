@@ -57,7 +57,7 @@ function ToolbarButton({ icon, active, onClick, className, tooltip }: ToolbarBut
         "size-8 bg-neutral-25 border-neutral-50 rounded cursor-pointer",
         active
           ? "bg-primary-25 border-primary-500 text-primary-500"
-          : "text-neutral-600 hover:bg-neutral-50",
+          : "text-neutral-600 hover:bg-neutral-50 hover:border-white hover:shadow-[0px_0px_0px_2px_rgba(206,212,224,0.32)]",
         className
       )}
     >
