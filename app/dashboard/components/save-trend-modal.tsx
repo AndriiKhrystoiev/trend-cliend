@@ -106,7 +106,7 @@ function FolderRow({
       )}
 
       <div className="flex items-center gap-2 min-w-0 flex-1 pl-3" style={{ marginLeft: `${depth * 24}px` }}>
-        {hasChildren ? (
+        {hasChildren && depth > 0 && (
           <button
             onClick={onToggle}
             className="text-neutral-400 hover:text-neutral-600 shrink-0"
@@ -118,8 +118,6 @@ function FolderRow({
               )}
             />
           </button>
-        ) : (
-          <span className="w-4 shrink-0" />
         )}
         <Folder className="size-4 text-neutral-300 shrink-0" />
         <span className="text-sm text-neutral-700 truncate">{name}</span>
