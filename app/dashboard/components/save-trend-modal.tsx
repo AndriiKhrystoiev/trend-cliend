@@ -162,8 +162,7 @@ function NewFolderInput({
       className="flex items-center gap-2 py-1.5 pl-3"
       style={{ marginLeft: `${depth * 24}px` }}
     >
-      <span className="w-4 shrink-0" />
-      <Folder className="size-4 text-neutral-400 shrink-0" />
+      <Folder className="size-4 text-neutral-300 shrink-0" />
       <Input
         ref={inputRef}
         value={value}
@@ -173,7 +172,7 @@ function NewFolderInput({
           if (value.trim()) onSubmit(value.trim());
           else onCancel();
         }}
-        className="h-7 text-sm border-neutral-200 px-2"
+        className="h-7 text-sm border-neutral-200 px-2 !focus:shadow-0 !focus:border-none !outline-0"
       />
     </div>
   );
