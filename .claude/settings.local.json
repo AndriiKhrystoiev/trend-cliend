@@ -23,7 +23,8 @@
       "Bash(npx eslint:*)",
       "Bash(npx next build:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(npx figma-developer-mcp:*)"
+      "Bash(npx figma-developer-mcp:*)",
+      "Bash(npx @anthropic-ai/figma-dev-mode-mcp-server:*)"
     ]
   }
 }
