@@ -27,7 +27,7 @@ export function Header() {
   }, [isMobileSearchOpen]);
 
   return (
-    <header className="flex h-[72px] items-center justify-between border-b border-neutral-50 bg-white px-3 z-100">
+    <header className="flex h-[72px] items-center justify-between border-b border-neutral-50 bg-white px-3 z-400">
       <div className="text-lg font-semibold text-primary-500">LOGO</div>
 
       {/* Center-Right: Search & Avatar */}
