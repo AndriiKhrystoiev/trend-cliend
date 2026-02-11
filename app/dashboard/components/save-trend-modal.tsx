@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { X, Folder, ChevronDown } from "lucide-react";
+import { X, Folder, ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -191,6 +191,7 @@ export function SaveTrendModal({ open, onOpenChange }: SaveTrendModalProps) {
   const [newFolderParentId, setNewFolderParentId] = useState<string | null>(
     null
   );
+  const [saved, setSaved] = useState(false);
 
   const toggleExpand = (id: string) => {
     setExpandedIds((prev) => {
@@ -287,40 +288,95 @@ export function SaveTrendModal({ open, onOpenChange }: SaveTrendModalProps) {
     });
   };
 
+  const handleOpenChange = (value: boolean) => {
+    onOpenChange(value);
+    if (!value) setSaved(false);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
         className="sm:max-w-116 p-6 gap-0"
       >
-        {/* Header */}
-        <DialogHeader className="flex flex-row items-center justify-between mb-2">
-          <div>
-            <DialogTitle className="text-xl font-semibold text-neutral-900">
-              Save trend
-            </DialogTitle>
-          </div>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="text-neutral-400 hover:text-neutral-600 transition-colors"
-          >
-            <X className="size-5" />
-          </button>
-        </DialogHeader>
+        {saved ? (
+          <>
+            <div className="flex justify-end">
+              <button
+                onClick={() => handleOpenChange(false)}
+                className="text-neutral-400 hover:text-neutral-600 transition-colors"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
 
-        <p className="text-sm text-neutral-400 mb-5">
-          Select or create a folder to save the trend
-        </p>
+            <div className="flex flex-col items-center text-left">
+              {/* Success badge icon */}
+              <div className="relative size-20 mb-6">
+                <svg viewBox="0 0 80 80" fill="none" className="size-20">
+                  <rect x="12" y="12" width="56" height="56" rx="4" fill="#BCF0DA" />
+                  <rect x="12" y="12" width="60" height="60" rx="4" fill="#DEF7EC" transform="rotate(45 43 38)" />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="size-11 rounded-full border-[2.5px] border-emerald-700 flex items-center justify-center">
+                    <Check className="size-6 text-emerald-700" strokeWidth={5} />
+                  </div>
+                </div>
+              </div>
 
-        {/* Folder tree */}
-        <div className="rounded-md border border-neutral-50 bg-neutral-25 p-3 mb-6 max-h-80 overflow-y-auto">
-          {renderTree(folders, 0)}
-        </div>
+              <DialogHeader className="mb-2 w-full text-left">
+                <DialogTitle className="text-xl font-semibold text-neutral-900">
+                  Trend successfully saved!
+                </DialogTitle>
+              </DialogHeader>
 
-        {/* Action button */}
-        <Button className="w-full h-10 text-base font-medium">
-          View save trends
-        </Button>
+              <p className="text-sm text-neutral-400 mb-6">
+                The trend has been saved to your profile. To view it, go to Saved Trends and find it there.
+              </p>
+            </div>
+
+            <Button
+              className="w-full h-10 text-base font-medium"
+              onClick={() => handleOpenChange(false)}
+            >
+              View saved trends
+            </Button>
+          </>
+        ) : (
+          <>
+            {/* Header */}
+            <DialogHeader className="flex flex-row items-center justify-between mb-2">
+              <div>
+                <DialogTitle className="text-xl font-semibold text-neutral-900">
+                  Save trend
+                </DialogTitle>
+              </div>
+              <button
+                onClick={() => handleOpenChange(false)}
+                className="text-neutral-400 hover:text-neutral-600 transition-colors"
+              >
+                <X className="size-5" />
+              </button>
+            </DialogHeader>
+
+            <p className="text-sm text-neutral-400 mb-5">
+              Select or create a folder to save the trend
+            </p>
+
+            {/* Folder tree */}
+            <div className="rounded-md border border-neutral-50 bg-neutral-25 p-3 mb-6 max-h-80 overflow-y-auto">
+              {renderTree(folders, 0)}
+            </div>
+
+            {/* Action button */}
+            <Button
+              className="w-full h-10 text-base font-medium"
+              onClick={() => setSaved(true)}
+            >
+              View save trends
+            </Button>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
