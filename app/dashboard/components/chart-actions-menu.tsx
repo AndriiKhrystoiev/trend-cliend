@@ -23,6 +23,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { SaveTrendModal } from "./save-trend-modal";
+import { ShareTrendModal } from "./share-trend-modal";
 
 interface ActionButtonProps {
   icon: React.ReactNode;
@@ -72,6 +73,7 @@ interface ChartActionsMenuProps {
 export function ChartActionsMenu({ className, activeAction: controlledActiveAction, onActiveActionChange }: ChartActionsMenuProps) {
   const [open, setOpen] = useState(false);
   const [isSaveTrendOpen, setIsSaveTrendOpen] = useState(false);
+  const [isShareTrendOpen, setIsShareTrendOpen] = useState(false);
   const [internalActiveAction, setInternalActiveAction] = useState<string>("hand");
   const activeAction = controlledActiveAction ?? internalActiveAction;
   const setActiveAction = onActiveActionChange ?? setInternalActiveAction;
@@ -106,7 +108,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
         <ActionButton
           icon={<Share2 className="size-4" />}
           active={activeAction === "share"}
-          onClick={() => setActiveAction("share")}
+          onClick={() => setIsShareTrendOpen(true)}
           tooltip="Share Trend"
         />
         <ActionButton
@@ -156,7 +158,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
         <ActionButton
           icon={<Share2 className="size-4" />}
           active={activeAction === "share"}
-          onClick={() => setActiveAction("share")}
+          onClick={() => setIsShareTrendOpen(true)}
           tooltip="Share Trend"
         />
         <ActionButton
@@ -245,7 +247,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
               <ActionButton
                 icon={<Share2 className="size-4" />}
                 active={activeAction === "share"}
-                onClick={() => setActiveAction("share")}
+                onClick={() => setIsShareTrendOpen(true)}
                 tooltip="Share Trend"
               />
 
@@ -278,6 +280,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
       </Popover>
 
       <SaveTrendModal open={isSaveTrendOpen} onOpenChange={setIsSaveTrendOpen} />
+      <ShareTrendModal open={isShareTrendOpen} onOpenChange={setIsShareTrendOpen} />
     </>
   );
 }
