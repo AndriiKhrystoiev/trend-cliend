@@ -83,7 +83,7 @@ function SelectContent({
         data-slot="select-content"
         className={cn(
           // Base styles
-          "bg-white text-neutral-900 relative z-50 overflow-x-hidden overflow-y-auto rounded-[4px] border border-neutral-100 shadow-lg",
+          "bg-white text-neutral-900 relative z-501 overflow-x-hidden overflow-y-auto rounded-[4px] border border-neutral-100 shadow-lg",
           // Sizing
           "max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin)",
           // Animations

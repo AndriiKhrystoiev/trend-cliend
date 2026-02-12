@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/tooltip";
 import { SaveTrendModal } from "./save-trend-modal";
 import { ShareTrendModal } from "./share-trend-modal";
+import { ExportTrendModal } from "./export-trend-modal";
 
 interface ActionButtonProps {
   icon: React.ReactNode;
@@ -74,6 +75,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
   const [open, setOpen] = useState(false);
   const [isSaveTrendOpen, setIsSaveTrendOpen] = useState(false);
   const [isShareTrendOpen, setIsShareTrendOpen] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
   const [internalActiveAction, setInternalActiveAction] = useState<string>("hand");
   const activeAction = controlledActiveAction ?? internalActiveAction;
   const setActiveAction = onActiveActionChange ?? setInternalActiveAction;
@@ -120,7 +122,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
         <ActionButton
           icon={<SaveAs className="size-4" />}
           active={activeAction === "save"}
-          onClick={() => setActiveAction("save")}
+          onClick={() => setIsExportOpen(true)}
           tooltip="Export trend"
         />
         <ActionButton
@@ -170,7 +172,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
         <ActionButton
           icon={<SaveAs className="size-4" />}
           active={activeAction === "save"}
-          onClick={() => setActiveAction("save")}
+          onClick={() => setIsExportOpen(true)}
           tooltip="Export trend"
         />
         <ActionButton
@@ -263,7 +265,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
               <ActionButton
                 icon={<SaveAs className="size-4" />}
                 active={activeAction === "save"}
-                onClick={() => setActiveAction("save")}
+                onClick={() => setIsExportOpen(true)}
                 tooltip="Export trend"
               />
 
@@ -281,6 +283,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
 
       <SaveTrendModal open={isSaveTrendOpen} onOpenChange={setIsSaveTrendOpen} />
       <ShareTrendModal open={isShareTrendOpen} onOpenChange={setIsShareTrendOpen} />
+      <ExportTrendModal open={isExportOpen} onOpenChange={setIsExportOpen} />
     </>
   );
 }
