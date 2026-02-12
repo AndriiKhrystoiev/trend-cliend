@@ -36,7 +36,8 @@ export function ChartAnnotationMarker({ annotation, onDelete }: ChartAnnotationM
   return (
     <div
       ref={markerRef}
-      className="absolute z-10"
+      data-annotation
+      className={`absolute ${isOpen ? "z-20" : "z-10"}`}
       style={{ left: `${annotation.xPercent}%`, top: `${annotation.yPercent}%` }}
     >
       {/* Annotation icon */}

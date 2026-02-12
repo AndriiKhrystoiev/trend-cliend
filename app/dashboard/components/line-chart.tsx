@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo, useRef } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Brush, ReferenceArea } from "recharts";
 import { cn } from "@/lib/utils";
 import { ChartAnnotationMarker, type ChartAnnotationData } from "./chart-annotation";
+import { AddAnnotationForm } from "./add-annotation-form";
 
 // Generate time-based data for the mini timeline
 const generateTimelineData = () => {
@@ -151,7 +152,7 @@ const createRoundedRectPath = (
 };
 
 // Track traveller positions to determine left vs right
-let travellerPositions: number[] = [];
+const travellerPositions: number[] = [];
 
 // Smart traveller that detects if it's the left or right handle
 const SmartTraveller = (props: { x: number; y: number; width: number; height: number }) => {
@@ -162,7 +163,7 @@ const SmartTraveller = (props: { x: number; y: number; width: number; height: nu
     travellerPositions.push(x);
     // Keep only last 2 positions
     if (travellerPositions.length > 2) {
-      travellerPositions = travellerPositions.slice(-2);
+      travellerPositions.splice(0, travellerPositions.length - 2);
     }
   }
 
@@ -183,9 +184,35 @@ const SmartTraveller = (props: { x: number; y: number; width: number; height: nu
 export function DashboardLineChart({ className, selectedPenIds, crosshairActive, showAnnotations }: DashboardLineChartProps) {
   const [annotations, setAnnotations] = useState<ChartAnnotationData[]>(mockAnnotations);
 
+  const [newAnnotationPos, setNewAnnotationPos] = useState<{ xPercent: number; yPercent: number } | null>(null);
+
   const handleDeleteAnnotation = useCallback((id: string) => {
     setAnnotations((prev) => prev.filter((a) => a.id !== id));
   }, []);
+
+  const handleChartClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!showAnnotations || !chartContainerRef.current) return;
+    if ((e.target as HTMLElement).closest("[data-annotation]")) return;
+    const rect = chartContainerRef.current.getBoundingClientRect();
+    const xPercent = ((e.clientX - rect.left) / rect.width) * 100;
+    const yPercent = ((e.clientY - rect.top) / rect.height) * 100;
+    setNewAnnotationPos({ xPercent, yPercent });
+  }, [showAnnotations]);
+
+  const handleAddAnnotation = useCallback((message: string) => {
+    if (!newAnnotationPos) return;
+    const newAnnotation: ChartAnnotationData = {
+      id: Date.now().toString(),
+      xPercent: newAnnotationPos.xPercent,
+      yPercent: newAnnotationPos.yPercent,
+      author: "You",
+      time: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }),
+      message,
+    };
+    setAnnotations((prev) => [...prev, newAnnotation]);
+    setNewAnnotationPos(null);
+  }, [newAnnotationPos]);
+
   const [brushRange, setBrushRange] = useState({ startIndex: 0, endIndex: 99 });
   const [isDragging, setIsDragging] = useState(false);
   const [hoverInfo, setHoverInfo] = useState<{ x: number; date: string } | null>(null);
@@ -283,9 +310,10 @@ export function DashboardLineChart({ className, selectedPenIds, crosshairActive,
       <div
         id="printable-chart"
         ref={chartContainerRef}
-        className={cn("h-75 md:h-87.5 overflow-x-auto relative", crosshairActive && "cursor-crosshair")}
+        className={cn("h-75 md:h-87.5 overflow-x-auto relative", crosshairActive && "cursor-crosshair", showAnnotations && "cursor-pointer")}
         onMouseMove={crosshairActive ? handleChartMouseMove : undefined}
         onMouseLeave={crosshairActive ? handleChartMouseLeave : undefined}
+        onClick={handleChartClick}
       >
         <div className="min-w-[600px] h-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -343,12 +371,23 @@ export function DashboardLineChart({ className, selectedPenIds, crosshairActive,
 
         {/* Annotation markers */}
         {showAnnotations && annotations.map((annotation) => (
-          <ChartAnnotationMarker
-            key={annotation.id}
-            annotation={annotation}
-            onDelete={handleDeleteAnnotation}
-          />
+          <div key={annotation.id} data-annotation>
+            <ChartAnnotationMarker
+              annotation={annotation}
+              onDelete={handleDeleteAnnotation}
+            />
+          </div>
         ))}
+
+        {/* Add annotation form */}
+        {showAnnotations && newAnnotationPos && (
+          <AddAnnotationForm
+            xPercent={newAnnotationPos.xPercent}
+            yPercent={newAnnotationPos.yPercent}
+            onSend={handleAddAnnotation}
+            onClose={() => setNewAnnotationPos(null)}
+          />
+        )}
 
         {/* Horizontal crosshair line */}
         {crosshairActive && crosshairY !== null && (
