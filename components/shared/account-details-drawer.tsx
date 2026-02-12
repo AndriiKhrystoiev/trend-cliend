@@ -54,7 +54,7 @@ export function AccountDetailsDrawer({ open, onOpenChange }: AccountDetailsDrawe
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="w-[95%] pl-4 sm:max-w-xl gap-0 rounded-tl-lg rounded-bl-lg"
+        className="w-[95%] pl-4 sm:max-w-xl gap-0 rounded-tl-lg rounded-bl-lg p-0"
       >
         {/* Header */}
         <SheetHeader className="flex flex-row items-center justify-between p-6 pb-0">
