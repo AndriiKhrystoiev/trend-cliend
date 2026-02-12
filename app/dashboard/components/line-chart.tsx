@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo, useRef } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Brush, ReferenceArea } from "recharts";
 import { cn } from "@/lib/utils";
+import { ChartAnnotationMarker, type ChartAnnotationData } from "./chart-annotation";
 
 // Generate time-based data for the mini timeline
 const generateTimelineData = () => {
@@ -41,10 +42,31 @@ const penToChartMap: Record<string, { dataKey: string; color: string }> = {
   "2": { dataKey: "teg1", color: "#57637B" },
 };
 
+// Mock annotation data
+const mockAnnotations: ChartAnnotationData[] = [
+  {
+    id: "1",
+    xPercent: 22,
+    yPercent: 28,
+    author: "Bonnie Green",
+    time: "11:46",
+    message: "That's awesome. I think our users will really appreciate the improvements.",
+  },
+  {
+    id: "2",
+    xPercent: 68,
+    yPercent: 45,
+    author: "Alex Johnson",
+    time: "14:22",
+    message: "We should monitor this dip closely over the next few hours.",
+  },
+];
+
 interface DashboardLineChartProps {
   className?: string;
   selectedPenIds?: Set<string>;
   crosshairActive?: boolean;
+  showAnnotations?: boolean;
 }
 
 // Format date for tooltip display
@@ -158,7 +180,12 @@ const SmartTraveller = (props: { x: number; y: number; width: number; height: nu
   );
 };
 
-export function DashboardLineChart({ className, selectedPenIds, crosshairActive }: DashboardLineChartProps) {
+export function DashboardLineChart({ className, selectedPenIds, crosshairActive, showAnnotations }: DashboardLineChartProps) {
+  const [annotations, setAnnotations] = useState<ChartAnnotationData[]>(mockAnnotations);
+
+  const handleDeleteAnnotation = useCallback((id: string) => {
+    setAnnotations((prev) => prev.filter((a) => a.id !== id));
+  }, []);
   const [brushRange, setBrushRange] = useState({ startIndex: 0, endIndex: 99 });
   const [isDragging, setIsDragging] = useState(false);
   const [hoverInfo, setHoverInfo] = useState<{ x: number; date: string } | null>(null);
@@ -313,6 +340,15 @@ export function DashboardLineChart({ className, selectedPenIds, crosshairActive 
             </LineChart>
           </ResponsiveContainer>
         </div>
+
+        {/* Annotation markers */}
+        {showAnnotations && annotations.map((annotation) => (
+          <ChartAnnotationMarker
+            key={annotation.id}
+            annotation={annotation}
+            onDelete={handleDeleteAnnotation}
+          />
+        ))}
 
         {/* Horizontal crosshair line */}
         {crosshairActive && crosshairY !== null && (

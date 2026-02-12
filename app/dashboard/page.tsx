@@ -65,7 +65,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Chart Area */}
-              <DashboardLineChart selectedPenIds={selectedPenIds} crosshairActive={activeAction === "pencil"} />
+              <DashboardLineChart selectedPenIds={selectedPenIds} crosshairActive={activeAction === "pencil"} showAnnotations={activeAction === "book"} />
 
               {/* Active Pens Table - Inside the same card */}
               <div className="mt-6">

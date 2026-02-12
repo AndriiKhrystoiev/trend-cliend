@@ -1,3 +1,4 @@
+export { default as Annotation } from "./annotation";
 export { default as Bookmark } from "./bookmark";
 export { default as Calendar } from "./calendar";
 export { default as ChartGrowDown } from "./chart-grow-down";

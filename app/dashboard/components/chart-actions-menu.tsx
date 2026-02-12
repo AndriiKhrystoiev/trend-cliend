@@ -39,7 +39,7 @@ function ActionButton({ icon, active, onClick, className, tooltip }: ActionButto
     <button
       onClick={onClick}
       className={cn(
-        "size-8 flex items-center justify-center rounded border transition-all",
+        "size-8 flex items-center justify-center rounded border transition-all cursor-pointer",
         active
           ? "bg-neutral-50 border-white shadow-[0px_0px_0px_2px_rgba(206,212,224,0.32)]"
           : "bg-neutral-25 border-neutral-50 hover:bg-neutral-50",
@@ -128,7 +128,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
         <ActionButton
           icon={<Bookmark className="size-4" />}
           active={activeAction === "book"}
-          onClick={() => setActiveAction("book")}
+          onClick={() => setActiveAction(activeAction === "book" ? "hand" : "book")}
           tooltip="Add Annotation"
         />
       </div>
@@ -178,7 +178,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
         <ActionButton
           icon={<Bookmark className="size-4" />}
           active={activeAction === "book"}
-          onClick={() => setActiveAction("book")}
+          onClick={() => setActiveAction(activeAction === "book" ? "hand" : "book")}
           tooltip="Add Annotation"
         />
       </div>
@@ -273,7 +273,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
               <ActionButton
                 icon={<Bookmark className="size-4" />}
                 active={activeAction === "book"}
-                onClick={() => setActiveAction("book")}
+                onClick={() => setActiveAction(activeAction === "book" ? "hand" : "book")}
                 tooltip="Add Annotation"
               />
             </div>
