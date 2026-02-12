@@ -5,9 +5,11 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { SearchInput } from "@/components/shared/search-input";
+import { AccountDetailsDrawer } from "@/components/shared/account-details-drawer";
 
 export function Header() {
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -52,12 +54,16 @@ export function Header() {
         </div>
 
         {/* Avatar */}
-        <Avatar className="size-12 bg-neutral-50">
-          <AvatarFallback className="bg-neutral-50 text-base font-medium text-neutral-900">
-            PH
-          </AvatarFallback>
-        </Avatar>
+        <button onClick={() => setIsAccountOpen(true)} className="cursor-pointer">
+          <Avatar className="size-12 bg-neutral-50">
+            <AvatarFallback className="bg-neutral-50 text-base font-medium text-neutral-900">
+              PH
+            </AvatarFallback>
+          </Avatar>
+        </button>
       </div>
+
+      <AccountDetailsDrawer open={isAccountOpen} onOpenChange={setIsAccountOpen} />
     </header>
   );
 }
