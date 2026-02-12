@@ -254,6 +254,7 @@ export function DashboardLineChart({ className, selectedPenIds, crosshairActive 
     <div className={cn(className)}>
       {/* Main Chart */}
       <div
+        id="printable-chart"
         ref={chartContainerRef}
         className={cn("h-75 md:h-87.5 overflow-x-auto relative", crosshairActive && "cursor-crosshair")}
         onMouseMove={crosshairActive ? handleChartMouseMove : undefined}

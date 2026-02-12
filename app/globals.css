@@ -236,3 +236,21 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-chart,
+  #printable-chart * {
+    visibility: visible;
+  }
+  #printable-chart {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: auto;
+    overflow: visible;
+  }
+}

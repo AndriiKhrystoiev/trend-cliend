@@ -114,7 +114,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
         <ActionButton
           icon={<Printer className="size-4" />}
           active={activeAction === "print"}
-          onClick={() => setActiveAction("print")}
+          onClick={() => window.print()}
           tooltip="Print trend"
         />
         <ActionButton
@@ -164,7 +164,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
         <ActionButton
           icon={<Printer className="size-4" />}
           active={activeAction === "print"}
-          onClick={() => setActiveAction("print")}
+          onClick={() => window.print()}
           tooltip="Print trend"
         />
         <ActionButton
@@ -255,7 +255,7 @@ export function ChartActionsMenu({ className, activeAction: controlledActiveActi
               <ActionButton
                 icon={<Printer className="size-4" />}
                 active={activeAction === "print"}
-                onClick={() => setActiveAction("print")}
+                onClick={() => window.print()}
                 tooltip="Print trend"
               />
 
