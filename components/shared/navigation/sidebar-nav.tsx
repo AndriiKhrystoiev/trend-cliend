@@ -179,7 +179,7 @@ function TreeItem({
               />
               {/* Vertical continuation below curve for non-last siblings */}
               {!isLast && (
-                <line x1="0.5" y1="20" x2="0.5" y2="40" stroke="#ced4e0" strokeWidth="1" />
+                <line x1="0.5" y1="14" x2="0.5" y2="40" stroke="#ced4e0" strokeWidth="1" />
               )}
             </svg>
           </>
