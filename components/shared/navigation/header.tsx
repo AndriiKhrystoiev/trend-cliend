@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { SearchInput } from "@/components/shared/search-input";
@@ -30,28 +30,42 @@ export function Header() {
 
   return (
     <header className="flex h-[72px] items-center justify-between border-b border-neutral-50 bg-white px-3 z-400">
-      <div className="text-lg font-semibold text-primary-500">LOGO</div>
+      {/* Mobile Search Active - takes full width */}
+      {isMobileSearchOpen ? (
+        <div ref={searchRef} className="flex flex-1 items-center gap-2 md:hidden">
+          <SearchInput className="flex-1" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-10 shrink-0 text-neutral-400 hover:bg-neutral-25"
+            onClick={() => setIsMobileSearchOpen(false)}
+          >
+            <X className="size-5" />
+          </Button>
+        </div>
+      ) : (
+        <div className="text-lg font-semibold text-primary-500 md:block hidden">LOGO</div>
+      )}
+
+      {/* Show LOGO on mobile only when search is closed */}
+      {!isMobileSearchOpen && (
+        <div className="text-lg font-semibold text-primary-500 md:hidden">LOGO</div>
+      )}
 
       {/* Center-Right: Search & Avatar */}
-      <div className="flex items-center gap-4">
+      <div className={`flex items-center gap-4 ${isMobileSearchOpen ? "hidden" : ""}`}>
         {/* Search - Hidden on mobile, visible on tablet+ */}
         <SearchInput className="hidden md:flex w-[384px]" />
 
-        {/* Mobile Search - Icon that expands to full search */}
-        <div ref={searchRef} className="flex md:hidden">
-          {isMobileSearchOpen ? (
-            <SearchInput className="w-full" />
-          ) : (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-10 text-neutral-400 hover:bg-neutral-25"
-              onClick={() => setIsMobileSearchOpen(true)}
-            >
-              <Search className="size-6" />
-            </Button>
-          )}
-        </div>
+        {/* Mobile Search Icon */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-10 text-neutral-400 hover:bg-neutral-25 md:hidden"
+          onClick={() => setIsMobileSearchOpen(true)}
+        >
+          <Search className="size-6" />
+        </Button>
 
         {/* Avatar */}
         <button onClick={() => setIsAccountOpen(true)} className="cursor-pointer">

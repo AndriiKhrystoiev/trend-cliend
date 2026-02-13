@@ -273,7 +273,7 @@ export function SearchInput({
         align="start"
         sideOffset={4}
         style={{ width: anchorWidth }}
-        className="p-0 rounded-sm border border-neutral-100 shadow-lg"
+        className="p-0 min-w-full sm:min-w-auto rounded-sm border border-neutral-100 shadow-lg"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         {/* Header */}
